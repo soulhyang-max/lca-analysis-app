@@ -2105,7 +2105,7 @@ def select_db(n_clicks_list):
     State("impact-values-store", "data"),
     prevent_initial_call=True
 )
-def update_lca_result(...):
+def update_lca_result(run_clicks, pathname, input_materials, impact_db):
     # print("=== LCA 분석 시작 ===")
     # print("run_clicks:", run_clicks)
     # print("pathname:", pathname)
