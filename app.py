@@ -2105,118 +2105,42 @@ def select_db(n_clicks_list):
     State("impact-values-store", "data"),
     prevent_initial_call=True
 )
-def update_lca_result(run_clicks, pathname, input_materials, impact_db):
-    print("=== LCA 분석 시작 ===")
-    print("run_clicks:", run_clicks)
-    print("pathname:", pathname)
-    print("input_materials:", input_materials)
-    print("impact_db 길이:", len(impact_db) if impact_db else 0)
-    
-    # 분석 실행 조건 확인 (LCA 분석 버튼 클릭 시 또는 LCA 페이지 진입 시)
-    if not run_clicks and pathname != "/lca":
-        print("LCA 분석 버튼이 클릭되지 않았습니다.")
-        return []
-    
-    # LCA 페이지에 진입했을 때 자동 분석 실행
-    if pathname == "/lca" and input_materials:
-        print("LCA 페이지 진입 - 자동 분석 실행")
-    
-    if not input_materials:
-        print("투입물 데이터가 없습니다.")
-        return []
-    
-    if not impact_db:
-        print("Impact DB가 없습니다.")
-        return []
-    
-    category_keys = {
-        "원료물질": "raw_material",
-        "보조물질": "additive",
-        "에너지": "energy",
-        "유틸리티": "utility",
-        "수송": "transport",
-        "폐기물처리": "waste"
-    }
-    
-    # 결과 초기화
-    lca_result = {cat: {k: 0 for k in category_keys.values()} for cat, _ in impact_categories}
-    lca_total = {cat: 0 for cat, _ in impact_categories}
-
-    print(f"\n=== 투입물별 상세 분석 ===")
-    for i, inp in enumerate(input_materials):
-        print(f"\n--- 투입물 {i+1} 분석 ---")
-        print(f"DB명: '{inp['db']}'")
-        print(f"국가: '{inp['country']}'")
-        print(f"분류: '{inp['category']}'")
-        print(f"투입량: {inp['amount']} (타입: {type(inp['amount'])})")
-        
-        # amount를 숫자로 변환
-        try:
-            amount = float(inp["amount"])
-        except (ValueError, TypeError):
-            print(f"  → 투입량 변환 실패: {inp['amount']}")
-            continue
-        
-        # DB명과 국가로 매칭되는 impact_db 데이터 찾기
-        matched = False
-        for row in impact_db:
-            if (row["DB명"].strip() == inp["db"].strip() and 
-                row["국가"].strip() == inp["country"].strip()):
-                print(f"  → 매칭 성공! DB명: '{row['DB명']}', 국가: '{row['국가']}'")
-                matched = True
-                db_row = row
-                break
-        
-        if not matched:
-            print(f"  → 매칭 실패! 사용 가능한 DB명들:")
-            for row in impact_db[:5]:  # 처음 5개만 표시
-                print(f"    - '{row['DB명']}' (국가: '{row['국가']}')")
-            continue
-        
-        cat_key = category_keys.get(inp["category"])
-        if not cat_key:
-            print(f"  → 분류 매칭 실패: '{inp['category']}'")
-            continue
-        
-        print(f"  → 분류 매칭 성공: {inp['category']} -> {cat_key}")
-        
-        # 25개 영향범주에 대해 계산
-        print(f"  → 25개 영향범주 계산:")
-        for cat, _ in impact_categories:
-            if cat in db_row:
-                value = db_row[cat] * amount
-                lca_total[cat] += value
-                lca_result[cat][cat_key] += value
-                print(f"    {cat}: {db_row[cat]:.2E} × {amount} = {value:.2E}")
-    
-            print(f"\n=== 분류별 합계 계산 ===")
-        for cat, _ in impact_categories:
-            print(f"{cat}:")
-            for cat_key, value in lca_result[cat].items():
-                if value > 0:
-                    print(f"  {cat_key}: {value:.2E}")
-            print(f"  TOTAL: {lca_total[cat]:.2E}")
-    
-    # 결과 테이블 생성 (지수 형태로 표시)
-    result_table = []
-    for idx, (cat, unit) in enumerate(impact_categories, 1):
-        row = {
-            "no": idx,
-            "impact": cat,
-            "unit": unit,
-            "total": f"{lca_total[cat]:.2E}",
-            "raw_material": f"{lca_result[cat]['raw_material']:.2E}",
-            "additive": f"{lca_result[cat]['additive']:.2E}",
-            "energy": f"{lca_result[cat]['energy']:.2E}",
-            "utility": f"{lca_result[cat]['utility']:.2E}",
-            "transport": f"{lca_result[cat]['transport']:.2E}",
-            "waste": f"{lca_result[cat]['waste']:.2E}"
-        }
-        result_table.append(row)
-    
-    print(f"\n=== LCA 분석 완료 ===")
-    print(f"결과 행 수: {len(result_table)}")
-    print(f"원료물질 총합: {lca_total.get('acidification', 0)} (acidification 예시)")
+def update_lca_result(...):
+    # print("=== LCA 분석 시작 ===")
+    # print("run_clicks:", run_clicks)
+    # print("pathname:", pathname)
+    # print("input_materials:", input_materials)
+    # print("impact_db 길이:", len(impact_db) if impact_db else 0)
+    # ... (중간 생략)
+    # print(f"\n=== 투입물별 상세 분석 ===")
+    # for i, inp in enumerate(input_materials):
+    #     print(f"\n--- 투입물 {i+1} 분석 ---")
+    #     ...
+    #     print(f"DB명: '{inp['db']}'")
+    #     ...
+    #     print(f"  → 매칭 실패! 사용 가능한 DB명들:")
+    #     for row in impact_db[:5]:  # 처음 5개만 표시
+    #         print(f"    - '{row['DB명']}' (국가: '{row['국가']}')")
+    #     ...
+    #     print(f"  → 분류 매칭 성공: {inp['category']} -> {cat_key}")
+    #     ...
+    #     print(f"  → 25개 영향범주 계산:")
+    #     for cat, _ in impact_categories:
+    #         if cat in db_row:
+    #             value = db_row[cat] * amount
+    #             lca_total[cat] += value
+    #             lca_result[cat][cat_key] += value
+    #             print(f"    {cat}: {db_row[cat]:.2E} × {amount} = {value:.2E}")
+    # print(f"\n=== 분류별 합계 계산 ===")
+    # for cat, _ in impact_categories:
+    #     print(f"{cat}:")
+    #     for cat_key, value in lca_result[cat].items():
+    #         if value > 0:
+    #             print(f"  {cat_key}: {value:.2E}")
+    #     print(f"  TOTAL: {lca_total[cat]:.2E}")
+    # print(f"\n=== LCA 분석 완료 ===")
+    # print(f"결과 행 수: {len(result_table)}")
+    # print(f"원료물질 총합: {lca_total.get('acidification', 0)} (acidification 예시)")
     return result_table
 
 if __name__ == "__main__":
