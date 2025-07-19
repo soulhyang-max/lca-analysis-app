@@ -2141,6 +2141,21 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
     # print(f"\n=== LCA 분석 완료 ===")
     # print(f"결과 행 수: {len(result_table)}")
     # print(f"원료물질 총합: {lca_total.get('acidification', 0)} (acidification 예시)")
+    result_table = []
+    for idx, (cat, unit) in enumerate(impact_categories, 1):
+        row = {
+            "no": idx,
+            "impact": cat,
+            "unit": unit,
+            "total": f"{lca_total[cat]:.2E}",
+            "raw_material": f"{lca_result[cat]['raw_material']:.2E}",
+            "additive": f"{lca_result[cat]['additive']:.2E}",
+            "energy": f"{lca_result[cat]['energy']:.2E}",
+            "utility": f"{lca_result[cat]['utility']:.2E}",
+            "transport": f"{lca_result[cat]['transport']:.2E}",
+            "waste": f"{lca_result[cat]['waste']:.2E}"
+        }
+        result_table.append(row)
     return result_table
 
 if __name__ == "__main__":
