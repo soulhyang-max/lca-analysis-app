@@ -1,0 +1,940 @@
+[
+  {
+    "물질명": "lorry 16-32",
+    "DB명": "transport, freight, lorry 16-32 metric ton, EURO6",
+    "국가": "RoW",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "lorry 16-32",
+    "DB명": "transport, freight, lorry 16-32 metric ton, EURO6",
+    "국가": "RER",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "lorry 3.5-7.5",
+    "DB명": "transport, freight, lorry 3.5-7.5 metric ton, EURO6",
+    "국가": "RoW",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "lorry 3.5-7.5",
+    "DB명": "transport, freight, lorry 3.5-7.5 metric ton, EURO6",
+    "국가": "RER",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "lorry 32이상",
+    "DB명": "transport, freight, lorry >32 metric ton, EURO6",
+    "국가": "RoW",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "lorry 32이상",
+    "DB명": "transport, freight, lorry >32 metric ton, EURO6",
+    "국가": "RER",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "lorry 7.5-16",
+    "DB명": "transport, freight, lorry 7.5-16 metric ton, EURO6",
+    "국가": "RoW",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "lorry 7.5-16",
+    "DB명": "transport, freight, lorry 7.5-16 metric ton, EURO6",
+    "국가": "RER",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "HDPE 6063 NA",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "HDPE 6063 NA",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "CA",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "IAI Area, Africa",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "IAI Area, Asia, without China and GCC",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "IAI Area, EU27 & EFTA",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "IAI Area, Gulf Cooperation Council",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "IAI Area, Russia & RER w/o EU27 & EFTA",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "IAI Area, South America",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_INGOT(PRIMARY(VG))",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "UN-OCEANIA",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X25 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X45 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X20 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "STB 0.2X40",
+    "DB명": "polyester fibre production, finished",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_WB_TAPE 0.45X40 DYCM450H 0.51",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_YARN_DYY 9000 NA",
+    "DB명": "polyester fibre production, finished",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X45 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X65 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X55 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X85 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "XLPE LS_4201S",
+    "DB명": "polyethylene production, low density, granulate",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "XLPE LS_4201S",
+    "DB명": "polyethylene production, low density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_PE LE0592S EHV",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X40 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_WB_TAPE 1X100 *DYC1000BS BS 0.23",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMI-CON.HDPE DYM-710 BK",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "BONDING_COMP ESCOR5050",
+    "DB명": "acrylic acid production",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X396",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "전기(고압)",
+    "DB명": "market for electricity, high voltage",
+    "국가": "KR",
+    "단위": "kWh\r",
+    "분류": "에너지"
+  },
+  {
+    "물질명": "전기(저압)",
+    "DB명": "market for electricity, low voltage",
+    "국가": "KR",
+    "단위": "kWh\r",
+    "분류": "에너지"
+  },
+  {
+    "물질명": "전기(중압)",
+    "DB명": "market for electricity, medium voltage",
+    "국가": "KR",
+    "단위": "kWh\r",
+    "분류": "에너지"
+  },
+  {
+    "물질명": "LNG",
+    "DB명": "market for natural gas, liquefied",
+    "국가": "GLO",
+    "단위": "m3\r",
+    "분류": "에너지"
+  },
+  {
+    "물질명": "LPG",
+    "DB명": "market for liquefied petroleum gas",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "에너지"
+  },
+  {
+    "물질명": "외부스팀",
+    "DB명": "steam production, in chemical industry",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "에너지"
+  },
+  {
+    "물질명": "공업용수",
+    "DB명": "market for tap water",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "유틸리티"
+  },
+  {
+    "물질명": "지하수",
+    "DB명": "tap water production, underground water without treatment",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "유틸리티"
+  },
+  {
+    "물질명": "벌크선",
+    "DB명": "transport, freight, sea, bulk carrier for dry goods",
+    "국가": "GLO",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "컨테이너선",
+    "DB명": "transport, freight, sea, container ship",
+    "국가": "GLO",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "바지선",
+    "DB명": "transport, freight, sea, bulk carrier for dry goods",
+    "국가": "GLO",
+    "단위": "metric ton*km\r",
+    "분류": "수송"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X15 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X418",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_WB_TAPE 0.38X100 DSC2100 0.29",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_YARN_DYY_9000SC-B BK",
+    "DB명": "polyester fibre production, finished",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_WB_TAPE 1.3X100 DYC1300BS BS 0.2",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X391",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X40 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X35 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X80 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X433",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X70 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X60 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.45X95 DYNM450H 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X457",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X472",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_PE LE0500 EHV",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "XLPE LS_4201EHV",
+    "DB명": "polyethylene production, low density, granulate",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMI-CON.HDPE EZ-3101 BK",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "HDPE HV610 BL",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X517",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X532",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "ENAMEL_WIRE 3.14mm(3.01mm)",
+    "DB명": "Copper, cathode",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X85 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X65 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X105 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.35X75 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.35X60 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_WB_TAPE(BS) 0.43X100 TYPE-B 0.38",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "MDPE HV550 RD",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_LM_TAPE 0.35X479 AL(0.2)COND BK/BL",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X50 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X90 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X70 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_LM_TAPE 0.25X381 AL(0.2)BL",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "ENAMEL_WIRE 2.74mm(2.64mm)",
+    "DB명": "Copper, cathode",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "ENAMEL_WIRE 3.2mm(3.1mm)",
+    "DB명": "Copper, cathode",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X60 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X110 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.35X52 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.35X64 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "PAPER_FILLER(2500SQ) 1.5mm",
+    "DB명": "kraft paper production",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_LM_TAPE 0.25X400 AL(0.2)BL",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X80 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE 0.25X55 0.35",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(SOFT) 0.15X20",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "HDPE 6062 BK",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_LM_TAPE 0.25X432 AL(0.2)BL",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "FR-MDPE PMZ-2207(28) RD",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "FR-MDPE PMZ-2207(28) BK",
+    "DB명": "polyethylene production, high density, granulate",
+    "국가": "RER",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE(DYNM300) 0.3X30 0.4",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE(DYNM300) 0.3X80 0.4",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE(DYNM300) 0.3X55 0.4",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE(DYNM300) 0.3X110 0.4",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "WB_TAPE(DYNM300) 0.3X135 0.4",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "NYLON_TAPE 0.13X40",
+    "DB명": "nylon 6-6 production",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "SEMICON_WB(DYCM300) 0.3X40 0.44",
+    "DB명": "textile production, nonwoven polyester, needle-punched",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X413",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "AL_TAPE(MTS) 1.5X398",
+    "DB명": "aluminium production, primary, ingot",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "전기동",
+    "DB명": "electrorefining of copper, anode",
+    "국가": "GLO",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "AU",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "CA",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "CL",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "ID",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "KZ",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "RU",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "US",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU_CATHODE",
+    "DB명": "Copper, cathode",
+    "국가": "ZM",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "AU",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "CA",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "CL",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "CN",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "ID",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "KZ",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "RU",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "RoW",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "US",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "CU-일반",
+    "DB명": "Copper, cathode",
+    "국가": "ZM",
+    "단위": "kg\r",
+    "분류": "원료물질"
+  },
+  {
+    "물질명": "",
+    "DB명": "",
+    "국가": "",
+    "단위": "",
+    "분류": ""
+  },
+  {
+    "물질명": "",
+    "DB명": "",
+    "국가": "",
+    "단위": "",
+    "분류": ""
+  },
+  {
+    "물질명": "",
+    "DB명": "",
+    "국가": "",
+    "단위": "",
+    "분류": ""
+  },
+  {
+    "물질명": "",
+    "DB명": "",
+    "국가": "",
+    "단위": "",
+    "분류": ""
+  },
+  {
+    "물질명": "",
+    "DB명": "",
+    "국가": "",
+    "단위": "",
+    "분류": ""
+  },
+  {
+    "물질명": "",
+    "분류": "",
+    "DB명": "",
+    "국가": "",
+    "단위": ""
+  }
+]
