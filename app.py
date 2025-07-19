@@ -2141,6 +2141,10 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
     # print(f"\n=== LCA 분석 완료 ===")
     # print(f"결과 행 수: {len(result_table)}")
     # print(f"원료물질 총합: {lca_total.get('acidification', 0)} (acidification 예시)")
+    # ... (중간 코드: category_keys, lca_result, lca_total 정의 및 계산)
+    lca_result = {cat: {k: 0 for k in category_keys.values()} for cat, _ in impact_categories}
+    lca_total = {cat: 0 for cat, _ in impact_categories}
+    # ... (중간 코드: lca_result, lca_total 값 누적)
     result_table = []
     for idx, (cat, unit) in enumerate(impact_categories, 1):
         row = {
