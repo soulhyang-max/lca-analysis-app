@@ -1690,7 +1690,7 @@ lca_columns = [
 # ─── 사이드바 ────────────────────────────────────────
 sidebar = html.Div(
     [
-        html.H2("메뉴", className="display-6"),
+        html.H2("LCA 분석", className="display-6", style={"fontSize": "1.5rem"}),
         html.Hr(),
         dbc.Nav(
             [
@@ -1715,7 +1715,12 @@ sidebar = html.Div(
 )
 
 # ─── 앱 레이아웃 ──────────────────────────────────────
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
+
+external_fonts = [
+    "https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap",
+    dbc.themes.BOOTSTRAP
+]
+app = dash.Dash(__name__, external_stylesheets=external_fonts, suppress_callback_exceptions=True)
 server = app.server
 app.layout = html.Div([
     dcc.Location(id="url"),
@@ -1725,8 +1730,8 @@ app.layout = html.Div([
     dcc.Store(id="db-edit-store", data=sample_db_data.to_dict("records"), storage_type="session"),
     dcc.Store(id="selected-db", data=None, storage_type="session"),
     sidebar,
-    html.Div(id="page-content", style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"})
-])
+    html.Div(id="page-content", style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"}),
+], style={"fontFamily": "Roboto, Arial, sans-serif"})
 
 # ─── 페이지 렌더링 ─────────────────────────────────────
 def render_page(pathname):
@@ -1788,13 +1793,30 @@ def render_page(pathname):
                 ],
                 data=[], row_selectable="multi", selected_rows=[],
                 editable=True,
-                style_cell={'textAlign':'left','padding':'5px'},
-                style_header={'fontWeight':'bold','backgroundColor':'#f1f1f1'},
+                style_cell={'textAlign':'center','padding':'5px','fontFamily': 'Roboto, Arial, sans-serif'},
+                style_header={'textAlign':'center','fontWeight':'bold','backgroundColor':'#f1f1f1', 'fontFamily': 'Roboto, Arial, sans-serif'},
                 style_table={'margin-top':'10px'}
             ),
             dbc.Modal([
                 dbc.ModalHeader("DB 검색"),
                 dbc.ModalBody([
+                    dbc.Row([
+                        dbc.Col(dcc.Dropdown(
+                            id="db-search-category",
+                            options=[
+                                {"label": "전체", "value": ""},
+                                {"label": "원료물질", "value": "원료물질"},
+                                {"label": "보조물질", "value": "보조물질"},
+                                {"label": "에너지", "value": "에너지"},
+                                {"label": "유틸리티", "value": "유틸리티"},
+                                {"label": "수송", "value": "수송"},
+                                {"label": "폐기물처리", "value": "폐기물처리"},
+                            ],
+                            value="",
+                            placeholder="분류 선택(전체)",
+                            style={"marginBottom": "10px"}
+                        ), width=12)
+                    ]),
                     dbc.Input(id="db-search-input", type="text", placeholder="DB명을 입력하세요", className="mb-2"),
                     html.Div(id="db-search-results"),
                     html.Hr(),
@@ -1805,7 +1827,15 @@ def render_page(pathname):
                     dbc.Button("확인", id="confirm-db-selection", color="primary", className="me-2"),
                     dbc.Button("닫기", id="close-db-search", color="secondary")
                 ])
-            ], id="db-search-modal", is_open=False),
+            ], id="db-search-modal", is_open=False, centered=True, style={
+                "maxWidth": "900px",
+                "width": "98%",
+                "position": "fixed",
+                "left": "50%",
+                "top": "2vh",
+                "transform": "translateX(-50%)",
+                "zIndex": 1050
+            }),  # 중앙 정렬 옵션 추가
         ], fluid=True)
 
     elif pathname == "/db":
@@ -1855,10 +1885,12 @@ def render_page(pathname):
                 id='lca-result-table',
                 columns=lca_columns,
                 data=[],  # 콜백에서 채움
-                style_cell={'textAlign': 'left', 'padding': '6px', 'font-size': '1em'},
+                style_cell={'textAlign': 'center', 'padding': '6px', 'font-size': '1em', 'fontFamily': 'Roboto, Arial, sans-serif'},
                 style_header={
+                    'textAlign': 'center',
                     'fontWeight': 'bold',
-                    'backgroundColor': '#d1e1fa'
+                    'backgroundColor': '#d1e1fa',
+                    'fontFamily': 'Roboto, Arial, sans-serif'
                 },
                 style_table={'margin-top': '20px', 'margin-bottom': '20px'},
                 page_size=25,
@@ -2021,18 +2053,21 @@ def toggle_db_modal(open_click, close_click, confirm_click, is_open):
         return False
     return True
 
-# ─── DB명 검색 결과 표시(중복 제거) ────────────────
+# ─── DB명 검색 결과 표시(분류 필터 추가) ────────────────
 @app.callback(
     Output("db-search-results", "children"),
     Input("db-search-input", "value"),
+    Input("db-search-category", "value"),
     State("db-data", "data")
 )
-def search_db_list(keyword, db_data):
+def search_db_list(keyword, selected_category, db_data):
     if not keyword:
         return "검색어를 입력하세요."
     seen = set()
     matches = []
     for row in db_data:
+        if selected_category and row.get("분류") != selected_category:
+            continue
         db_name = row["DB명"]
         if keyword.lower() in db_name.lower() and db_name not in seen:
             matches.append(row)
@@ -2041,9 +2076,15 @@ def search_db_list(keyword, db_data):
         return "검색 결과가 없습니다."
     return html.Ul([
         html.Li(
-            dbc.Button(row["DB명"], id={"type": "select-db", "index": row["DB명"]}, color="link")
+            dbc.Button(
+                row["DB명"],
+                id={"type": "select-db", "index": row["DB명"]},
+                color="link",
+                style={"justifyContent": "flex-start", "display": "flex", "textAlign": "left", "whiteSpace": "normal", "fontFamily": "Roboto, Arial, sans-serif"}
+            ),
+            style={"textAlign": "left", "paddingLeft": "0", "fontFamily": "Roboto, Arial, sans-serif"}
         ) for row in matches
-    ])
+    ], style={"textAlign": "left", "paddingLeft": "24px", "paddingRight": "24px", "fontFamily": "Roboto, Arial, sans-serif"})  # 좌우 여백 추가
 
 from dash.dependencies import ALL
 
@@ -2133,9 +2174,25 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
         cat_key = category_keys.get(inp["category"])
         if not cat_key:
             continue
+        # 단위 변환
+        input_unit = inp.get("unit")
+        db_unit = inp.get("dbunit")
+        unit_factor = 1.0
+        if input_unit and db_unit:
+            iu = input_unit.strip().lower()
+            du = db_unit.strip().lower()
+            if du == "kg" and iu == "g":
+                unit_factor = 1/1000
+            elif du == "kg" and iu == "ton":
+                unit_factor = 1000
+            elif du == "g" and iu == "kg":
+                unit_factor = 1000
+            elif du == "ton" and iu == "kg":
+                unit_factor = 1/1000
+            # 필요시 더 다양한 단위 변환 추가
         for cat, _ in impact_categories:
             if cat in db_row:
-                value = db_row[cat] * amount
+                value = db_row[cat] * amount * unit_factor
                 lca_total[cat] += value
                 lca_result[cat][cat_key] += value
 
