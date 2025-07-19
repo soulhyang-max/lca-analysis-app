@@ -2106,42 +2106,6 @@ def select_db(n_clicks_list):
     prevent_initial_call=True
 )
 def update_lca_result(run_clicks, pathname, input_materials, impact_db):
-    # print("=== LCA 분석 시작 ===")
-    # print("run_clicks:", run_clicks)
-    # print("pathname:", pathname)
-    # print("input_materials:", input_materials)
-    # print("impact_db 길이:", len(impact_db) if impact_db else 0)
-    # ... (중간 생략)
-    # print(f"\n=== 투입물별 상세 분석 ===")
-    # for i, inp in enumerate(input_materials):
-    #     print(f"\n--- 투입물 {i+1} 분석 ---")
-    #     ...
-    #     print(f"DB명: '{inp['db']}'")
-    #     ...
-    #     print(f"  → 매칭 실패! 사용 가능한 DB명들:")
-    #     for row in impact_db[:5]:  # 처음 5개만 표시
-    #         print(f"    - '{row['DB명']}' (국가: '{row['국가']}')")
-    #     ...
-    #     print(f"  → 분류 매칭 성공: {inp['category']} -> {cat_key}")
-    #     ...
-    #     print(f"  → 25개 영향범주 계산:")
-    #     for cat, _ in impact_categories:
-    #         if cat in db_row:
-    #             value = db_row[cat] * amount
-    #             lca_total[cat] += value
-    #             lca_result[cat][cat_key] += value
-    #             print(f"    {cat}: {db_row[cat]:.2E} × {amount} = {value:.2E}")
-    # print(f"\n=== 분류별 합계 계산 ===")
-    # for cat, _ in impact_categories:
-    #     print(f"{cat}:")
-    #     for cat_key, value in lca_result[cat].items():
-    #         if value > 0:
-    #             print(f"  {cat_key}: {value:.2E}")
-    #     print(f"  TOTAL: {lca_total[cat]:.2E}")
-    # print(f"\n=== LCA 분석 완료 ===")
-    # print(f"결과 행 수: {len(result_table)}")
-    # print(f"원료물질 총합: {lca_total.get('acidification', 0)} (acidification 예시)")
-    # ... (중간 코드: category_keys, lca_result, lca_total 정의 및 계산)
     category_keys = {
         "원료물질": "raw_material",
         "보조물질": "additive",
@@ -2152,7 +2116,6 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
     }
     lca_result = {cat: {k: 0 for k in category_keys.values()} for cat, _ in impact_categories}
     lca_total = {cat: 0 for cat, _ in impact_categories}
-    # ... (중간 코드: lca_result, lca_total 값 누적)
     for inp in input_materials:
         try:
             amount = float(inp["amount"])
@@ -2175,7 +2138,25 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
                 value = db_row[cat] * amount
                 lca_total[cat] += value
                 lca_result[cat][cat_key] += value
+
+    # result_table 생성
+    result_table = []
+    for idx, (cat, unit) in enumerate(impact_categories, 1):
+        row = {
+            "no": idx,
+            "impact": cat,
+            "unit": unit,
+            "total": f"{lca_total[cat]:.2E}",
+            "raw_material": f"{lca_result[cat]['raw_material']:.2E}",
+            "additive": f"{lca_result[cat]['additive']:.2E}",
+            "energy": f"{lca_result[cat]['energy']:.2E}",
+            "utility": f"{lca_result[cat]['utility']:.2E}",
+            "transport": f"{lca_result[cat]['transport']:.2E}",
+            "waste": f"{lca_result[cat]['waste']:.2E}"
+        }
+        result_table.append(row)
     return result_table
+ 
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0', port=8050)
