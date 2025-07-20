@@ -1898,35 +1898,6 @@ def render_page(pathname):
             html.P("※ 각 분류별 LCA 결과값이 여기 표에 표시됩니다. 숫자 입력은 자동 계산됩니다."),
         ], fluid=True)
 
-    elif pathname == "/":
-        # 첫화면: 히어로 섹션 + 로그인 버튼
-        return html.Div([
-            html.Div([
-                html.I(className="fas fa-leaf hero-icon"),
-                html.H1("지속가능한 미래를 위한", className="hero-title"),
-                html.H2("LCA 환경영향 분석 시스템", className="hero-subtitle"),
-                html.P("제품의 전 생애주기에서 발생하는 환경영향을 과학적으로 측정하고 분석하여, 친환경적이고 지속가능한 의사결정을 지원하는 전문 도구입니다.", className="hero-description"),
-                html.Div([
-                    html.Div([
-                        html.I(className="fas fa-chart-line hero-feature-icon"),
-                        html.H3("정확한 분석", className="hero-feature-title"),
-                        html.P("과학적 방법론을 통한 정밀한 환경영향 평가", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                    html.Div([
-                        html.I(className="fas fa-database hero-feature-icon"),
-                        html.H3("방대한 DB", className="hero-feature-title"),
-                        html.P("국내외 다양한 환경영향 DB 내장", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                    html.Div([
-                        html.I(className="fas fa-bolt hero-feature-icon"),
-                        html.H3("빠른 결과", className="hero-feature-title"),
-                        html.P("즉각적인 분석 및 시각화 제공", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                ], className="hero-features"),
-            ], className="hero-content"),
-            html.Button("로그인", id="login-button", className="login-btn", n_clicks=0, style={"position": "fixed", "top": "2rem", "right": "2rem", "zIndex": 1000}),
-        ], style={"display": "flex", "alignItems": "center", "justifyContent": "center", "minHeight": "100vh"})
-
     return html.Div([html.H3("페이지 준비 중입니다.")])
 
 # ─── 페이지 전환 ────────────────────────────────

@@ -1,14 +1,8 @@
-import dash
-from dash import html, dcc, Input, Output, State, dash_table, callback_context
-import dash_bootstrap_components as dbc
-import pandas as pd
-import json
-import os
-
+﻿
 impact_db = [
   {
-    "DB명": "transport, freight, lorry 16-32 metric ton, EURO6",
-    "국가": "RoW",
+    "DB紐?: "transport, freight, lorry 16-32 metric ton, EURO6",
+    "援??": "RoW",
     "acidification": 0.0004665406527552214,
     "climate change: biogenic": 0.1885494916325229,
     "climate change: fossil": 4.984257528078234e-05,
@@ -36,8 +30,8 @@ impact_db = [
     "water use": 0.01274256163584312
   },
   {
-    "DB명": "transport, freight, lorry 16-32 metric ton, EURO6",
-    "국가": "RER",
+    "DB紐?: "transport, freight, lorry 16-32 metric ton, EURO6",
+    "援??": "RER",
     "acidification": 0.0004038703457986204,
     "climate change: biogenic": 0.1849044943815216,
     "climate change: fossil": 5.395457750879004e-05,
@@ -65,8 +59,8 @@ impact_db = [
     "water use": 0.01312348222468712
   },
   {
-    "DB명": "transport, freight, lorry 3.5-7.5 metric ton, EURO6",
-    "국가": "RoW",
+    "DB紐?: "transport, freight, lorry 3.5-7.5 metric ton, EURO6",
+    "援??": "RoW",
     "acidification": 0.0014654751902129,
     "climate change: biogenic": 0.5832636197066242,
     "climate change: fossil": 0.0001800656773564031,
@@ -94,8 +88,8 @@ impact_db = [
     "water use": 0.04218659771213926
   },
   {
-    "DB명": "transport, freight, lorry 3.5-7.5 metric ton, EURO6",
-    "국가": "RER",
+    "DB紐?: "transport, freight, lorry 3.5-7.5 metric ton, EURO6",
+    "援??": "RER",
     "acidification": 0.001181818225645573,
     "climate change: biogenic": 0.5568030104900816,
     "climate change: fossil": 0.0002041487601030225,
@@ -123,8 +117,8 @@ impact_db = [
     "water use": 0.04481477054965119
   },
   {
-    "DB명": "transport, freight, lorry >32 metric ton, EURO6",
-    "국가": "RoW",
+    "DB紐?: "transport, freight, lorry >32 metric ton, EURO6",
+    "援??": "RoW",
     "acidification": 0.0005864031260656991,
     "climate change: biogenic": 0.2419772990466468,
     "climate change: fossil": 6.433831564264865e-05,
@@ -152,8 +146,8 @@ impact_db = [
     "water use": 0.01526158884681789
   },
   {
-    "DB명": "transport, freight, lorry >32 metric ton, EURO6",
-    "국가": "RER",
+    "DB紐?: "transport, freight, lorry >32 metric ton, EURO6",
+    "援??": "RER",
     "acidification": 0.0004822246499028764,
     "climate change: biogenic": 0.2337122788437657,
     "climate change: fossil": 7.16607063900633e-05,
@@ -181,8 +175,8 @@ impact_db = [
     "water use": 0.0159993975299813
   },
   {
-    "DB명": "transport, freight, lorry 7.5-16 metric ton, EURO6",
-    "국가": "RoW",
+    "DB紐?: "transport, freight, lorry 7.5-16 metric ton, EURO6",
+    "援??": "RoW",
     "acidification": 0.0005864031260656991,
     "climate change: biogenic": 0.2419772990466468,
     "climate change: fossil": 6.433831564264865e-05,
@@ -210,8 +204,8 @@ impact_db = [
     "water use": 0.01526158884681789
   },
   {
-    "DB명": "transport, freight, lorry 7.5-16 metric ton, EURO6",
-    "국가": "RER",
+    "DB紐?: "transport, freight, lorry 7.5-16 metric ton, EURO6",
+    "援??": "RER",
     "acidification": 0.0004822246499028764,
     "climate change: biogenic": 0.2337122788437657,
     "climate change: fossil": 7.16607063900633e-05,
@@ -239,8 +233,8 @@ impact_db = [
     "water use": 0.0159993975299813
   },
   {
-    "DB명": "polyethylene production, high density, granulate",
-    "국가": "RoW",
+    "DB紐?: "polyethylene production, high density, granulate",
+    "援??": "RoW",
     "acidification": 0.00949400748439431,
     "climate change: biogenic": 2.319841799669729,
     "climate change: fossil": 0.00333584003715966,
@@ -268,8 +262,8 @@ impact_db = [
     "water use": 0.8593832580819728
   },
   {
-    "DB명": "polyethylene production, high density, granulate",
-    "국가": "RER",
+    "DB紐?: "polyethylene production, high density, granulate",
+    "援??": "RER",
     "acidification": 0.006798662297169727,
     "climate change: biogenic": 1.902452277669814,
     "climate change: fossil": 0.002646415894692653,
@@ -297,8 +291,8 @@ impact_db = [
     "water use": 0.8505148105766858
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "CA",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "CA",
     "acidification": 0.07274530842500421,
     "climate change: biogenic": 7.531954855102165,
     "climate change: fossil": 0.009292538220617437,
@@ -326,8 +320,8 @@ impact_db = [
     "water use": 13.03913186075013
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "CN",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "CN",
     "acidification": 0.152554308777789,
     "climate change: biogenic": 23.45972623934835,
     "climate change: fossil": 0.005362904244666704,
@@ -355,8 +349,8 @@ impact_db = [
     "water use": 2.46949383470672
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "IAI Area, Africa",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "IAI Area, Africa",
     "acidification": 0.1668283099115653,
     "climate change: biogenic": 14.89068168519825,
     "climate change: fossil": 0.05222177318051805,
@@ -384,8 +378,8 @@ impact_db = [
     "water use": 12.2573711580391
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "IAI Area, Asia, without China and GCC",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "IAI Area, Asia, without China and GCC",
     "acidification": 0.1856897814144623,
     "climate change: biogenic": 28.76639570707204,
     "climate change: fossil": 0.0175805993253771,
@@ -413,8 +407,8 @@ impact_db = [
     "water use": 4.275152879912463
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "IAI Area, EU27 & EFTA",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "IAI Area, EU27 & EFTA",
     "acidification": 0.04500047002693963,
     "climate change: biogenic": 7.209838002062297,
     "climate change: fossil": 0.03071537943140184,
@@ -442,8 +436,8 @@ impact_db = [
     "water use": 13.88397488159878
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "IAI Area, Gulf Cooperation Council",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "IAI Area, Gulf Cooperation Council",
     "acidification": 0.07163327640051889,
     "climate change: biogenic": 16.82197143040647,
     "climate change: fossil": 0.004639322996635662,
@@ -471,8 +465,8 @@ impact_db = [
     "water use": 1.625552496848945
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "IAI Area, Russia & RER w/o EU27 & EFTA",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "IAI Area, Russia & RER w/o EU27 & EFTA",
     "acidification": 0.07113912877222803,
     "climate change: biogenic": 9.162538451271352,
     "climate change: fossil": 0.0301522880017663,
@@ -500,8 +494,8 @@ impact_db = [
     "water use": 7.39898635794165
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "IAI Area, South America",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "IAI Area, South America",
     "acidification": 0.06685286851051553,
     "climate change: biogenic": 11.16477604298506,
     "climate change: fossil": 0.4668022344864314,
@@ -529,8 +523,8 @@ impact_db = [
     "water use": 16.98604685816212
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "RoW",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "RoW",
     "acidification": 0.2131287630157153,
     "climate change: biogenic": 21.7601748187725,
     "climate change: fossil": 0.005621589745292675,
@@ -558,8 +552,8 @@ impact_db = [
     "water use": 2.221904947248021
   },
   {
-    "DB명": "aluminium production, primary, ingot",
-    "국가": "UN-OCEANIA",
+    "DB紐?: "aluminium production, primary, ingot",
+    "援??": "UN-OCEANIA",
     "acidification": 0.1367725510152475,
     "climate change: biogenic": 20.27065603442973,
     "climate change: fossil": 0.01895487614542686,
@@ -587,8 +581,8 @@ impact_db = [
     "water use": 5.138262393073969
   },
   {
-    "DB명": "textile production, nonwoven polyester, needle-punched",
-    "국가": "RoW",
+    "DB紐?: "textile production, nonwoven polyester, needle-punched",
+    "援??": "RoW",
     "acidification": 0.02814244724467353,
     "climate change: biogenic": 5.504900059124122,
     "climate change: fossil": 0.01785778283319467,
@@ -616,8 +610,8 @@ impact_db = [
     "water use": 2.450199904596805
   },
   {
-    "DB명": "polyester fibre production, finished",
-    "국가": "RoW",
+    "DB紐?: "polyester fibre production, finished",
+    "援??": "RoW",
     "acidification": 0.01826230221400528,
     "climate change: biogenic": 4.275012087831722,
     "climate change: fossil": 0.007139959343636908,
@@ -645,8 +639,8 @@ impact_db = [
     "water use": 2.028320597357287
   },
   {
-    "DB명": "polyethylene production, low density, granulate",
-    "국가": "RoW",
+    "DB紐?: "polyethylene production, low density, granulate",
+    "援??": "RoW",
     "acidification": 0.01067564295732578,
     "climate change: biogenic": 2.50676825391379,
     "climate change: fossil": 0.004011815577610536,
@@ -674,8 +668,8 @@ impact_db = [
     "water use": 1.138914447765908
   },
   {
-    "DB명": "polyethylene production, low density, granulate",
-    "국가": "RER",
+    "DB紐?: "polyethylene production, low density, granulate",
+    "援??": "RER",
     "acidification": 0.007221533076845002,
     "climate change: biogenic": 1.918311433350991,
     "climate change: fossil": 0.003516287635079392,
@@ -703,8 +697,8 @@ impact_db = [
     "water use": 1.141473299975068
   },
   {
-    "DB명": "acrylic acid production",
-    "국가": "RER",
+    "DB紐?: "acrylic acid production",
+    "援??": "RER",
     "acidification": 0.004609103404363894,
     "climate change: biogenic": 1.931622254693634,
     "climate change: fossil": 0.001957810744449999,
@@ -732,8 +726,8 @@ impact_db = [
     "water use": 0.4852289673573231
   },
   {
-    "DB명": "market for electricity, high voltage",
-    "국가": "KR",
+    "DB紐?: "market for electricity, high voltage",
+    "援??": "KR",
     "acidification": 0.002244768124836137,
     "climate change: biogenic": 0.6934377394283747,
     "climate change: fossil": 0.000675147888403226,
@@ -761,8 +755,8 @@ impact_db = [
     "water use": 0.1442360415940051
   },
   {
-    "DB명": "market for electricity, low voltage",
-    "국가": "KR",
+    "DB紐?: "market for electricity, low voltage",
+    "援??": "KR",
     "acidification": 0.002526622704752922,
     "climate change: biogenic": 0.6972658679996785,
     "climate change: fossil": 0.0006952185934046667,
@@ -790,8 +784,8 @@ impact_db = [
     "water use": 0.1514953305327877
   },
   {
-    "DB명": "market for electricity, medium voltage",
-    "국가": "KR",
+    "DB紐?: "market for electricity, medium voltage",
+    "援??": "KR",
     "acidification": 0.002290940718494875,
     "climate change: biogenic": 0.6982364284204597,
     "climate change: fossil": 0.000680383316637915,
@@ -819,8 +813,8 @@ impact_db = [
     "water use": 0.1455512808908281
   },
   {
-    "DB명": "market for natural gas, liquefied",
-    "국가": "GLO",
+    "DB紐?: "market for natural gas, liquefied",
+    "援??": "GLO",
     "acidification": 0.0026799757986518,
     "climate change: biogenic": 0.6422668137809451,
     "climate change: fossil": 0.0002366429869226088,
@@ -848,8 +842,8 @@ impact_db = [
     "water use": 0.03961990425192723
   },
   {
-    "DB명": "market for liquefied petroleum gas",
-    "국가": "RoW",
+    "DB紐?: "market for liquefied petroleum gas",
+    "援??": "RoW",
     "acidification": 0.005834859508290099,
     "climate change: biogenic": 0.9846939489051307,
     "climate change: fossil": 0.0003126572656427796,
@@ -877,8 +871,8 @@ impact_db = [
     "water use": 0.0812400573350386
   },
   {
-    "DB명": "steam production, in chemical industry",
-    "국가": "RoW",
+    "DB紐?: "steam production, in chemical industry",
+    "援??": "RoW",
     "acidification": 0.001218326815286872,
     "climate change: biogenic": 0.348997605010887,
     "climate change: fossil": 5.923151528231126e-05,
@@ -906,8 +900,8 @@ impact_db = [
     "water use": 0.01250197652609036
   },
   {
-    "DB명": "market for tap water",
-    "국가": "RoW",
+    "DB紐?: "market for tap water",
+    "援??": "RoW",
     "acidification": 6.548803729397869e-06,
     "climate change: biogenic": 0.001240890749523278,
     "climate change: fossil": 1.955303630712735e-06,
@@ -935,8 +929,8 @@ impact_db = [
     "water use": 0.0003241104083011059
   },
   {
-    "DB명": "tap water production, underground water without treatment",
-    "국가": "RoW",
+    "DB紐?: "tap water production, underground water without treatment",
+    "援??": "RoW",
     "acidification": 1.474049708003459e-06,
     "climate change: biogenic": 0.0002984641946046991,
     "climate change: fossil": 5.117787837206939e-07,
@@ -964,8 +958,8 @@ impact_db = [
     "water use": 6.376230784243411e-05
   },
   {
-    "DB명": "transport, freight, sea, bulk carrier for dry goods",
-    "국가": "GLO",
+    "DB紐?: "transport, freight, sea, bulk carrier for dry goods",
+    "援??": "GLO",
     "acidification": 0.0001881023552701557,
     "climate change: biogenic": 0.007084442146282268,
     "climate change: fossil": 1.491140299946688e-06,
@@ -993,8 +987,8 @@ impact_db = [
     "water use": 0.0002868057629415415
   },
   {
-    "DB명": "transport, freight, sea, container ship",
-    "국가": "GLO",
+    "DB紐?: "transport, freight, sea, container ship",
+    "援??": "GLO",
     "acidification": 0.0003026048890479922,
     "climate change: biogenic": 0.01016351302910071,
     "climate change: fossil": 1.82223513906984e-06,
@@ -1022,8 +1016,8 @@ impact_db = [
     "water use": 0.0003528614277838889
   },
   {
-    "DB명": "Rayon fabric, Cross linked polyacrylic acid sodium salt, Copper wire",
-    "국가": "-",
+    "DB紐?: "Rayon fabric, Cross linked polyacrylic acid sodium salt, Copper wire",
+    "援??": "-",
     "acidification": 0.11960057891328366,
     "climate change: biogenic": 3.423908765489374,
     "climate change: fossil": 0.016993822468087845,
@@ -1051,8 +1045,8 @@ impact_db = [
     "water use": 2.5592101568218935
   },
   {
-    "DB명": "fibre production, viscose",
-    "국가": "GLO",
+    "DB紐?: "fibre production, viscose",
+    "援??": "GLO",
     "acidification": 0.03498790304702176,
     "climate change: biogenic": 3.253854319835082,
     "climate change: fossil": 0.02771152125493032,
@@ -1080,8 +1074,8 @@ impact_db = [
     "water use": 2.756970682739676
   },
   {
-    "DB명": "electrorefining of copper, anode",
-    "국가": "GLO",
+    "DB紐?: "electrorefining of copper, anode",
+    "援??": "GLO",
     "acidification": 0.76523886065726,
     "climate change: biogenic": 8.39994405604269,
     "climate change: fossil": 0.0215506277769425,
@@ -1109,8 +1103,8 @@ impact_db = [
     "water use": 7.883200031061689
   },
   {
-    "DB명": "chromium steel 18/8+glass fibre production",
-    "국가": "RER",
+    "DB紐?: "chromium steel 18/8+glass fibre production",
+    "援??": "RER",
     "acidification": 0.028767008843632168,
     "climate change: biogenic": 5.1212164195269905,
     "climate change: fossil": 0.007681399277767852,
@@ -1138,8 +1132,8 @@ impact_db = [
     "water use": 1.6627730520376984
   },
   {
-    "DB명": "steel production, chromium steel 18/8, hot rolled",
-    "국가": "RER",
+    "DB紐?: "steel production, chromium steel 18/8, hot rolled",
+    "援??": "RER",
     "acidification": 0.02889318947718707,
     "climate change: biogenic": 5.151144731345814,
     "climate change: fossil": 0.007720589671137274,
@@ -1167,8 +1161,8 @@ impact_db = [
     "water use": 1.672521942594404
   },
   {
-    "DB명": "glass fibre production",
-    "국가": "RER",
+    "DB紐?: "glass fibre production",
+    "援??": "RER",
     "acidification": 0.01627512612169681,
     "climate change: biogenic": 2.158313549463509,
     "climate change: fossil": 0.003801550334195096,
@@ -1196,8 +1190,8 @@ impact_db = [
     "water use": 0.6976328869238415
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "RoW",
+    "DB紐?: "Copper, cathode",
+    "援??": "RoW",
     "acidification": 0.6997461233961606,
     "climate change: biogenic": 7.680969246657977,
     "climate change: fossil": 0.025184671637298085,
@@ -1225,8 +1219,8 @@ impact_db = [
     "water use": 3.618375634618254
   },
   {
-    "DB명": "Rayon fabric, Cross linked polyacrylic acid sodium salt",
-    "국가": "-",
+    "DB紐?: "Rayon fabric, Cross linked polyacrylic acid sodium salt",
+    "援??": "-",
     "acidification": 0.024168056598951836,
     "climate change: biogenic": 2.782922351428539,
     "climate change: fossil": 0.018538966826540066,
@@ -1254,8 +1248,8 @@ impact_db = [
     "water use": 1.947857195069249
   },
   {
-    "DB명": "kraft paper production",
-    "국가": "RoW",
+    "DB紐?: "kraft paper production",
+    "援??": "RoW",
     "acidification": 0.006104896162041702,
     "climate change: biogenic": 0.9429393189756768,
     "climate change: fossil": 0.03006644543096794,
@@ -1283,8 +1277,8 @@ impact_db = [
     "water use": 0.5568652336447707
   },
   {
-    "DB명": "nylon 6-6 production",
-    "국가": "RoW",
+    "DB紐?: "nylon 6-6 production",
+    "援??": "RoW",
     "acidification": 0.03550699861014575,
     "climate change: biogenic": 8.22872237854184,
     "climate change: fossil": 0.008334869917959519,
@@ -1312,8 +1306,8 @@ impact_db = [
     "water use": 9.726354884840223
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "AU",
+    "DB紐?: "Copper, cathode",
+    "援??": "AU",
     "acidification": 0.7086895128418595,
     "climate change: biogenic": 8.913662972503863,
     "climate change: fossil": 0.01897977741244305,
@@ -1341,8 +1335,8 @@ impact_db = [
     "water use": 3.2696705588394384
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "CA",
+    "DB紐?: "Copper, cathode",
+    "援??": "CA",
     "acidification": 0.715587086847661,
     "climate change: biogenic": 7.949551852866387,
     "climate change: fossil": 0.02803629030843921,
@@ -1370,8 +1364,8 @@ impact_db = [
     "water use": 8.699611003327048
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "CL",
+    "DB紐?: "Copper, cathode",
+    "援??": "CL",
     "acidification": 0.7913491372618027,
     "climate change: biogenic": 7.376716587581444,
     "climate change: fossil": 0.015157103109842425,
@@ -1399,8 +1393,8 @@ impact_db = [
     "water use": 2.7904628679394308
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "CN",
+    "DB紐?: "Copper, cathode",
+    "援??": "CN",
     "acidification": 0.7519965396854298,
     "climate change: biogenic": 7.855448956762617,
     "climate change: fossil": 0.014330234724591006,
@@ -1428,8 +1422,8 @@ impact_db = [
     "water use": 2.8252270616837603
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "ID",
+    "DB紐?: "Copper, cathode",
+    "援??": "ID",
     "acidification": 0.2814292998760648,
     "climate change: biogenic": 11.045973472401315,
     "climate change: fossil": 0.0281639122176163,
@@ -1457,8 +1451,8 @@ impact_db = [
     "water use": 3.8491229639006668
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "KZ",
+    "DB紐?: "Copper, cathode",
+    "援??": "KZ",
     "acidification": 0.6956180204907363,
     "climate change: biogenic": 6.905320980367119,
     "climate change: fossil": 0.01511568488138718,
@@ -1486,8 +1480,8 @@ impact_db = [
     "water use": 2.461986317285688
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "RU",
+    "DB紐?: "Copper, cathode",
+    "援??": "RU",
     "acidification": 2.053751025133349,
     "climate change: biogenic": 8.83680341849109,
     "climate change: fossil": 0.017769381697176432,
@@ -1515,8 +1509,8 @@ impact_db = [
     "water use": 3.882592570918741
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "US",
+    "DB紐?: "Copper, cathode",
+    "援??": "US",
     "acidification": 0.6984960480404345,
     "climate change: biogenic": 8.178640799535842,
     "climate change: fossil": 0.020113705864315466,
@@ -1544,8 +1538,8 @@ impact_db = [
     "water use": 3.8513677360197414
   },
   {
-    "DB명": "Copper, cathode",
-    "국가": "ZM",
+    "DB紐?: "Copper, cathode",
+    "援??": "ZM",
     "acidification": 0.6913861623181318,
     "climate change: biogenic": 5.808713683445196,
     "climate change: fossil": 0.0159737352842301,
@@ -1572,677 +1566,3 @@ impact_db = [
     "photochemical oxidant formation: human health": 0.11160439761293615,
     "water use": 2.6595798321239714
   }
-]
-
-
-
-# ─── 기본 DB 데이터 ────────────────────────────────
-def load_db_data():
-    """DB 데이터를 파일에서 로드하거나 기본 데이터를 반환"""
-    try:
-        if os.path.exists('db_data.json'):
-            with open('db_data.json', 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                return pd.DataFrame(data)
-        else:
-            # 기본 데이터 생성
-            default_data = [
-                {"물질명": "철", "DB명": "Iron_DB", "국가": "한국", "단위": "kg"},
-                {"물질명": "알루미늄", "DB명": "Al_DB", "국가": "일본", "단위": "ton"},
-                {"물질명": "전기", "DB명": "Electricity_DB", "국가": "독일", "단위": "kWh"},
-                {"물질명": "물", "DB명": "Water_DB", "국가": "미국", "단위": "L"},
-            ]
-            sample_db_data = pd.DataFrame(default_data).assign(분류="원료물질")
-            # 기본 데이터를 파일로 저장
-            save_db_data(sample_db_data)
-            return sample_db_data
-    except Exception as e:
-        print(f"DB 데이터 로드 중 오류: {e}")
-        # 오류 시 기본 데이터 반환
-        return pd.DataFrame([
-            {"물질명": "철", "DB명": "Iron_DB", "국가": "한국", "단위": "kg"},
-            {"물질명": "알루미늄", "DB명": "Al_DB", "국가": "일본", "단위": "ton"},
-            {"물질명": "전기", "DB명": "Electricity_DB", "국가": "독일", "단위": "kWh"},
-            {"물질명": "물", "DB명": "Water_DB", "국가": "미국", "단위": "L"},
-        ]).assign(분류="원료물질")
-
-def save_db_data(data):
-    """DB 데이터를 파일로 저장"""
-    try:
-        if isinstance(data, pd.DataFrame):
-            data_dict = data.to_dict('records')
-        else:
-            data_dict = data
-        with open('db_data.json', 'w', encoding='utf-8') as f:
-            json.dump(data_dict, f, ensure_ascii=False, indent=2)
-        print("DB 데이터가 성공적으로 저장되었습니다.")
-    except Exception as e:
-        print(f"DB 데이터 저장 중 오류: {e}")
-
-def load_material_data():
-    """투입물 데이터를 파일에서 로드하거나 빈 리스트를 반환"""
-    try:
-        if os.path.exists('material_data.json'):
-            with open('material_data.json', 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                return data
-        else:
-            return []
-    except Exception as e:
-        print(f"투입물 데이터 로드 중 오류: {e}")
-        return []
-
-def save_material_data_to_file(data):
-    """투입물 데이터를 파일로 저장"""
-    try:
-        with open('material_data.json', 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-        print("투입물 데이터가 성공적으로 저장되었습니다.")
-    except Exception as e:
-        print(f"투입물 데이터 저장 중 오류: {e}")
-
-# 초기 DB 데이터 로드
-sample_db_data = load_db_data()
-
-# ─── 영향범주(25개) 데이터 ──────────────────────────
-impact_categories = [
-    ("acidification", "mol H+-Eq"),
-    ("climate change: biogenic", "kg CO2-Eq"),
-    ("climate change: fossil", "kg CO2-Eq"),
-    ("climate change: land use and land use change", "kg CO2-Eq"),
-    ("climate change", "kg CO2-Eq"),
-    ("ecotoxicity: freshwater, inorganics", "CTUe"),
-    ("ecotoxicity: freshwater, organics", "CTUe"),
-    ("ecotoxicity: freshwater", "CTUe"),
-    ("energy resources: non-renewable", "MJ, net calorific value"),
-    ("eutrophication: freshwater", "kg P-Eq"),
-    ("eutrophication: marine", "kg N-Eq"),
-    ("eutrophication: terrestrial", "mol N-Eq"),
-    ("human toxicity: carcinogenic, inorganics", "CTUh"),
-    ("human toxicity: carcinogenic, organics", "CTUh"),
-    ("human toxicity: carcinogenic", "CTUh"),
-    ("human toxicity: non-carcinogenic, inorganics", "CTUh"),
-    ("human toxicity: non-carcinogenic, organics", "CTUh"),
-    ("human toxicity: non-carcinogenic", "CTUh"),
-    ("ionising radiation: human health", "kBq U235-Eq"),
-    ("land use", "dimensionless"),
-    ("material resources: metals/minerals", "kg Sb-Eq"),
-    ("ozone depletion", "kg CFC-11-Eq"),
-    ("particulate matter formation", "disease incidence"),
-    ("photochemical oxidant formation: human health", "kg NMVOC-Eq"),
-    ("water use", "m3 world Eq deprived"),
-]
-
-# ─── LCA 분석결과 표 컬럼(분류별로 변경) ──────────────
-lca_columns = [
-    {"name": "No.", "id": "no"},
-    {"name": "Impact category", "id": "impact"},
-    {"name": "Unit", "id": "unit"},
-    {"name": "TOTAL", "id": "total"},
-    {"name": "원료물질", "id": "raw_material"},
-    {"name": "보조물질", "id": "additive"},
-    {"name": "에너지", "id": "energy"},
-    {"name": "유틸리티", "id": "utility"},
-    {"name": "수송", "id": "transport"},
-    {"name": "폐기물처리", "id": "waste"},
-]
-
-# ─── 사이드바 ────────────────────────────────────────
-sidebar = html.Div(
-    [
-        html.H2("LCA 분석", className="display-6", style={"fontSize": "1.5rem"}),
-        html.Hr(),
-        dbc.Nav(
-            [
-                dbc.NavLink("기본정보", href="/", active="exact"),
-                dbc.NavLink("투입물", href="/inputs", active="exact"),
-                dbc.NavLink("산출물", href="/outputs", active="exact"),
-                dbc.NavLink("에너지/유틸리티", href="/energy", active="exact"),
-                dbc.NavLink("원료수송", href="/transport", active="exact"),
-                dbc.NavLink("DB목록", href="/db", active="exact"),
-                dbc.NavLink("LCA 분석결과", href="/lca", active="exact"),
-            ],
-            vertical=True,
-            pills=True,
-        ),
-    ],
-    style={
-        "position": "fixed",
-        "top": 0, "left": 0, "bottom": 0,
-        "width": "16rem", "padding": "2rem 1rem",
-        "background-color": "#f8f9fa",
-    },
-)
-
-# ─── 앱 레이아웃 ──────────────────────────────────────
-
-external_fonts = [
-    "https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap",
-    dbc.themes.BOOTSTRAP
-]
-app = dash.Dash(__name__, external_stylesheets=external_fonts, suppress_callback_exceptions=True)
-server = app.server
-app.layout = html.Div([
-    dcc.Location(id="url"),
-    dcc.Store(id="table-store", data=load_material_data(), storage_type="session"),            # 투입물 테이블 데이터
-    dcc.Store(id="impact-values-store", data=impact_db),
-    dcc.Store(id="db-data", data=sample_db_data.to_dict("records"), storage_type="session"),
-    dcc.Store(id="db-edit-store", data=sample_db_data.to_dict("records"), storage_type="session"),
-    dcc.Store(id="selected-db", data=None, storage_type="session"),
-    sidebar,
-    html.Div(id="page-content", style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"}),
-], style={"fontFamily": "Roboto, Arial, sans-serif"})
-
-# ─── 페이지 렌더링 ─────────────────────────────────────
-def render_page(pathname):
-    if pathname == "/inputs":
-        return dbc.Container([
-            html.H2("투입물 입력"),
-            dbc.Row([dbc.Label("물질명", width=2),
-                     dbc.Col(dbc.Input(id="material-name", type="text", placeholder="물질명을 입력하세요"), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("투입량", width=2),
-                     dbc.Col(dbc.Input(id="material-amount", type="number", placeholder="숫자를 입력하세요"), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("단위", width=2),
-                     dbc.Col(dcc.Dropdown(
-                         id="material-unit",
-                         options=[{"label": u, "value": u} for u in ["g", "kg", "ton", "m³", "L", "kWh", "MJ"]],
-                         placeholder="단위를 선택하세요"
-                     ), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("분류", width=2),
-                     dbc.Col(dcc.Dropdown(
-                         id="material-category",
-                         options=[
-                             {"label": "원료물질", "value": "원료물질"},
-                             {"label": "보조물질", "value": "보조물질"},
-                             {"label": "에너지", "value": "에너지"},
-                             {"label": "유틸리티", "value": "유틸리티"},
-                             {"label": "수송", "value": "수송"},
-                             {"label": "폐기물처리", "value": "폐기물처리"},
-                         ],
-                         placeholder="분류를 선택하세요"
-                     ), width=4)], className="mb-3"),
-            dbc.Row([
-                dbc.Label("연결 DB", width=2),
-                dbc.Col(dbc.Input(id="material-db", type="text", placeholder="선택된 DB명", disabled=True), width=4),
-                dbc.Col(dbc.Button("연결 DB 검색", id="open-db-search", color="info"), width="auto"),
-            ], className="mb-3"),
-            dbc.Row([dbc.Label("국가", width=2),
-                 dbc.Col(dcc.Dropdown(
-                    id="material-country",
-                    options=[],  # DB 선택 시 자동으로 채워짐
-                    placeholder="국가를 선택하세요"
-                ), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("단위", width=2),
-                     dbc.Col(dbc.Input(id="material-dbunit", type="text", placeholder="DB 단위 (자동 적용 예정)", disabled=True), width=4)], className="mb-3"),
-            dbc.Row([
-                dbc.Col(dbc.Button("추가", id="add-row", color="primary"), width="auto"),
-                dbc.Col(dbc.Button("삭제", id="delete-row", color="danger"), width="auto"),
-                dbc.Col(dbc.Button("저장", id="save-data", color="success"), width="auto"),
-                dbc.Col(html.Div(id="analysis-result"), width=6),
-            ], className="mb-3"),
-            dash_table.DataTable(
-                id="material-table",
-                columns=[
-                    {"name": "물질명", "id": "name"},
-                    {"name": "투입량", "id": "amount"},
-                    {"name": "단위", "id": "unit"},
-                    {"name": "분류", "id": "category"},
-                    {"name": "연결 DB", "id": "db"},
-                    {"name": "국가", "id": "country"},
-                    {"name": "DB단위", "id": "dbunit"},
-                ],
-                data=[], row_selectable="multi", selected_rows=[],
-                editable=True,
-                style_cell={'textAlign':'center','padding':'5px','fontFamily': 'Roboto, Arial, sans-serif'},
-                style_header={'textAlign':'center','fontWeight':'bold','backgroundColor':'#f1f1f1', 'fontFamily': 'Roboto, Arial, sans-serif'},
-                style_table={'margin-top':'10px'}
-            ),
-            dbc.Modal([
-                dbc.ModalHeader("DB 검색"),
-                dbc.ModalBody([
-                    dbc.Row([
-                        dbc.Col(dcc.Dropdown(
-                            id="db-search-category",
-                            options=[
-                                {"label": "전체", "value": ""},
-                                {"label": "원료물질", "value": "원료물질"},
-                                {"label": "보조물질", "value": "보조물질"},
-                                {"label": "에너지", "value": "에너지"},
-                                {"label": "유틸리티", "value": "유틸리티"},
-                                {"label": "수송", "value": "수송"},
-                                {"label": "폐기물처리", "value": "폐기물처리"},
-                            ],
-                            value="",
-                            placeholder="분류 선택(전체)",
-                            style={"marginBottom": "10px"}
-                        ), width=12)
-                    ]),
-                    dbc.Input(id="db-search-input", type="text", placeholder="DB명을 입력하세요", className="mb-2"),
-                    html.Div(id="db-search-results"),
-                    html.Hr(),
-                    html.Div("선택된 DB명:", style={"marginTop": "10px"}),
-                    html.Div(id="selected-db-name", style={"fontWeight": "bold", "marginBottom": "10px"})
-                ]),
-                dbc.ModalFooter([
-                    dbc.Button("확인", id="confirm-db-selection", color="primary", className="me-2"),
-                    dbc.Button("닫기", id="close-db-search", color="secondary")
-                ])
-            ], id="db-search-modal", is_open=False, centered=True, style={
-                "maxWidth": "900px",
-                "width": "98%",
-                "position": "fixed",
-                "left": "50%",
-                "top": "2vh",
-                "transform": "translateX(-50%)",
-                "zIndex": 1050
-            }),  # 중앙 정렬 옵션 추가
-        ], fluid=True)
-
-    elif pathname == "/db":
-        return dbc.Container([
-            html.H2("DB목록 관리"),
-            dbc.Row([
-                dbc.Col(dbc.Button("행 추가", id="add-db-row", color="primary"), width="auto"),
-                dbc.Col(dbc.Button("선택 행 삭제", id="delete-selected-rows", color="danger"), width="auto"),
-            ], className="mb-3"),
-            dash_table.DataTable(
-                id="db-edit-table",
-                columns=[
-                    {"name": "물질명", "id": "물질명", "editable": True},
-                    {"name": "분류", "id": "분류", "editable": True},
-                    {"name": "DB명", "id": "DB명", "editable": True},
-                    {"name": "국가", "id": "국가", "editable": True},
-                    {"name": "단위", "id": "단위", "editable": True},
-                ],
-                data=[],  # 콜백에서 채움
-                editable=True,
-                row_deletable=True,
-                row_selectable="multi",
-                selected_rows=[],
-                sort_action="native",
-                style_cell={'textAlign': 'left', 'padding': '5px'},
-                style_header={'fontWeight': 'bold', 'backgroundColor': '#f1f1f1', "cursor":"pointer"},
-                style_table={'margin-top': '10px'},
-                page_size=20,
-            ),
-            html.P("사용법:"),
-            html.Ul([
-                html.Li("셀 클릭 후 직접 입력/수정 가능합니다."),
-                html.Li("행 우측 휴지통 아이콘으로 한 줄씩 삭제할 수 있습니다."),
-                html.Li("여러 행을 Ctrl/Shift+클릭으로 선택 후 '선택 행 삭제' 버튼으로 한 번에 삭제할 수 있습니다."),
-                html.Li("헤더를 클릭하면 해당 컬럼 기준으로 정렬됩니다."),
-                html.Li("변경 사항은 다른 메뉴로 이동할 때 자동으로 저장됩니다."),
-            ], style={"fontSize":"0.95em"}),
-        ], fluid=True)
-
-    elif pathname == "/lca":
-        return dbc.Container([
-            html.H2("LCA 분석결과"),
-            dbc.Row([
-                dbc.Col(dbc.Button("LCA 분석 실행", id="run-lca-analysis", color="primary"), width="auto"),
-            ], className="mb-3"),
-            dash_table.DataTable(
-                id='lca-result-table',
-                columns=lca_columns,
-                data=[],  # 콜백에서 채움
-                style_cell={'textAlign': 'center', 'padding': '6px', 'font-size': '1em', 'fontFamily': 'Roboto, Arial, sans-serif'},
-                style_header={
-                    'textAlign': 'center',
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#d1e1fa',
-                    'fontFamily': 'Roboto, Arial, sans-serif'
-                },
-                style_table={'margin-top': '20px', 'margin-bottom': '20px'},
-                page_size=25,
-            ),
-            html.P("※ 각 분류별 LCA 결과값이 여기 표에 표시됩니다. 숫자 입력은 자동 계산됩니다."),
-        ], fluid=True)
-
-    elif pathname == "/":
-        # 첫화면: 히어로 섹션 + 로그인 버튼
-        return html.Div([
-            html.Div([
-                html.I(className="fas fa-leaf hero-icon"),
-                html.H1("지속가능한 미래를 위한", className="hero-title"),
-                html.H2("LCA 환경영향 분석 시스템", className="hero-subtitle"),
-                html.P("제품의 전 생애주기에서 발생하는 환경영향을 과학적으로 측정하고 분석하여, 친환경적이고 지속가능한 의사결정을 지원하는 전문 도구입니다.", className="hero-description"),
-                html.Div([
-                    html.Div([
-                        html.I(className="fas fa-chart-line hero-feature-icon"),
-                        html.H3("정확한 분석", className="hero-feature-title"),
-                        html.P("과학적 방법론을 통한 정밀한 환경영향 평가", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                    html.Div([
-                        html.I(className="fas fa-database hero-feature-icon"),
-                        html.H3("방대한 DB", className="hero-feature-title"),
-                        html.P("국내외 다양한 환경영향 DB 내장", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                    html.Div([
-                        html.I(className="fas fa-bolt hero-feature-icon"),
-                        html.H3("빠른 결과", className="hero-feature-title"),
-                        html.P("즉각적인 분석 및 시각화 제공", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                ], className="hero-features"),
-            ], className="hero-content"),
-            html.Button("로그인", id="login-button", className="login-btn", n_clicks=0, style={"position": "fixed", "top": "2rem", "right": "2rem", "zIndex": 1000}),
-        ], style={"display": "flex", "alignItems": "center", "justifyContent": "center", "minHeight": "100vh"})
-
-    return html.Div([html.H3("페이지 준비 중입니다.")])
-
-# ─── 페이지 전환 ────────────────────────────────
-@app.callback(Output("page-content", "children"), Input("url", "pathname"))
-def display_page(pathname):
-    return render_page(pathname)
-
-# ─── DB목록 관리 테이블 동기화 ───────────────────
-@app.callback(
-    Output("db-edit-table", "data"),
-    Input("db-edit-store", "data")
-)
-def show_db_table(db_edit_store_data):
-    return db_edit_store_data
-
-@app.callback(
-    Output("db-edit-store", "data"),
-    [Input("add-db-row", "n_clicks"), Input("delete-selected-rows", "n_clicks")],
-    State("db-edit-store", "data"),
-    State("db-edit-table", "selected_rows"),
-    prevent_initial_call=True
-)
-def update_db_edit_store(add_click, delete_click, current_store, selected_rows):
-    ctx = callback_context
-    if not ctx.triggered:
-        return dash.no_update
-    trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    if trigger_id == "add-db-row":
-        new_row = {"물질명": "", "분류": "", "DB명": "", "국가": "", "단위": ""}
-        return current_store + [new_row]
-    elif trigger_id == "delete-selected-rows":
-        if selected_rows:
-            return [row for i, row in enumerate(current_store) if i not in selected_rows]
-        else:
-            return current_store
-    return dash.no_update
-
-# ─── DB 테이블 편집 콜백 (순환 의존성 방지) ───────────────────────────────
-@app.callback(
-    Output("db-edit-store", "data", allow_duplicate=True),
-    Input("db-edit-table", "data"),
-    State("db-edit-store", "data"),
-    prevent_initial_call=True
-)
-def update_db_from_table(table_data, current_store):
-    if table_data is not None and table_data != current_store:
-        return table_data
-    return dash.no_update
-
-# ─── DB목록 자동 저장 (페이지 이동 시) ───────────────────────────────
-@app.callback(
-    Output("db-data", "data"),
-    Input("url", "pathname"),
-    State("db-edit-store", "data"),
-    prevent_initial_call=True
-)
-def auto_save_db_list(pathname, db_edit_store_data):
-    # DB 페이지에서 다른 페이지로 이동할 때 자동 저장
-    if pathname != "/db" and db_edit_store_data:
-        # 파일로 저장
-        save_db_data(db_edit_store_data)
-        print("DB목록이 자동으로 저장되었습니다.")
-        return db_edit_store_data
-    return dash.no_update
-
-# ─── 투입물 입력 테이블 표시 ────────────────────────
-@app.callback(
-    Output("material-table", "data"),
-    Input("table-store", "data")
-)
-def show_material_table(table_data):
-    return table_data
-
-# ─── 투입물 추가/삭제 콜백 ──────────────────────────
-@app.callback(
-    Output("table-store", "data"),
-    [
-        Input("add-row", "n_clicks"),
-        Input("delete-row", "n_clicks"),
-    ],
-    [
-        State("material-name", "value"),
-        State("material-amount", "value"),
-        State("material-unit", "value"),
-        State("material-category", "value"),
-        State("material-db", "value"),
-        State("material-country", "value"),
-        State("material-dbunit", "value"),
-        State("table-store", "data"),
-        State("material-table", "selected_rows"),
-    ],
-    prevent_initial_call=True
-)
-def update_material_table(add_click, delete_click,
-                         name, amount, unit, category, db, country, dbunit,
-                         table_data, selected_rows):
-    ctx = callback_context
-    if not ctx.triggered:
-        return dash.no_update
-    trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    if trigger_id == "add-row":
-        if not all([name, amount, unit, category, db, country, dbunit]):
-            return table_data
-        new_row = {
-            "name": name,
-            "amount": amount,
-            "unit": unit,
-            "category": category,
-            "db": db,
-            "country": country,
-            "dbunit": dbunit
-        }
-        if table_data is None:
-            table_data = []
-        return table_data + [new_row]
-    elif trigger_id == "delete-row":
-        if selected_rows:
-            return [row for i, row in enumerate(table_data) if i not in selected_rows]
-        else:
-            return table_data
-    return dash.no_update
-
-# ─── 투입물 저장 알림 ──────────────────────────────
-@app.callback(
-    Output("analysis-result", "children"),
-    Input("save-data", "n_clicks"),
-    State("table-store", "data"),
-    prevent_initial_call=True
-)
-def save_material_data(n_clicks, table_data):
-    if n_clicks and table_data:
-        # 세션 저장 (파일 저장 아님)
-        print("투입물 데이터가 세션에 저장되었습니다.")
-        return dbc.Alert("투입물 데이터가 저장되었습니다", color="success", duration=3000)
-    return ""
-    return ""
-
-# ─── DB 검색 팝업 열고 닫기 ─────────────────────────
-@app.callback(
-    Output("db-search-modal", "is_open"),
-    Input("open-db-search", "n_clicks"),
-    Input("close-db-search", "n_clicks"),
-    Input("confirm-db-selection", "n_clicks"),
-    State("db-search-modal", "is_open"),
-    prevent_initial_call=True
-)
-def toggle_db_modal(open_click, close_click, confirm_click, is_open):
-    ctx = callback_context
-    if not ctx.triggered:
-        return is_open
-    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    if triggered_id in ["close-db-search", "confirm-db-selection"]:
-        return False
-    return True
-
-# ─── DB명 검색 결과 표시(분류 필터 추가) ────────────────
-@app.callback(
-    Output("db-search-results", "children"),
-    Input("db-search-input", "value"),
-    Input("db-search-category", "value"),
-    State("db-data", "data")
-)
-def search_db_list(keyword, selected_category, db_data):
-    if not keyword:
-        return "검색어를 입력하세요."
-    seen = set()
-    matches = []
-    for row in db_data:
-        if selected_category and row.get("분류") != selected_category:
-            continue
-        db_name = row["DB명"]
-        if keyword.lower() in db_name.lower() and db_name not in seen:
-            matches.append(row)
-            seen.add(db_name)
-    if not matches:
-        return "검색 결과가 없습니다."
-    return html.Ul([
-        html.Li(
-            dbc.Button(
-                row["DB명"],
-                id={"type": "select-db", "index": row["DB명"]},
-                color="link",
-                style={"justifyContent": "flex-start", "display": "flex", "textAlign": "left", "whiteSpace": "normal", "fontFamily": "Roboto, Arial, sans-serif"}
-            ),
-            style={"textAlign": "left", "paddingLeft": "0", "fontFamily": "Roboto, Arial, sans-serif"}
-        ) for row in matches
-    ], style={"textAlign": "left", "paddingLeft": "24px", "paddingRight": "24px", "fontFamily": "Roboto, Arial, sans-serif"})  # 좌우 여백 추가
-
-from dash.dependencies import ALL
-
-@app.callback(
-    Output("material-db", "value"),
-    Input("confirm-db-selection", "n_clicks"),
-    State("selected-db", "data"),
-    prevent_initial_call=True
-)
-def apply_selected_db(confirm_click, selected_db):
-    return selected_db
-
-@app.callback(
-    Output("material-country", "options"),
-    Input("material-db", "value"),
-    State("db-data", "data"),
-    prevent_initial_call=True
-)
-def update_country_options(selected_db, db_data):
-    if not selected_db:
-        return []
-    countries = list({row["국가"] for row in db_data if row["DB명"] == selected_db})
-    return [{"label": c, "value": c} for c in countries]
-
-@app.callback(
-    Output("material-dbunit", "value"),
-    Input("material-country", "value"),
-    State("material-db", "value"),
-    State("db-data", "data"),
-    prevent_initial_call=True
-)
-def update_dbunit(selected_country, selected_db, db_data):
-    if not selected_country or not selected_db:
-        return ""
-    for row in db_data:
-        if row["DB명"] == selected_db and row["국가"] == selected_country:
-            return row["단위"]
-    return ""
-
-@app.callback(
-    Output("selected-db", "data"),
-    Output("selected-db-name", "children"),
-    Input({"type": "select-db", "index": ALL}, "n_clicks"),
-    prevent_initial_call=True
-)
-def select_db(n_clicks_list):
-    ctx = callback_context
-    if not ctx.triggered:
-        return dash.no_update, dash.no_update
-    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    db_name = eval(triggered_id)["index"]
-    return db_name, db_name
-
-# ─── LCA 분석결과 계산 및 표 표시 ──────────────────
-@app.callback(
-    Output("lca-result-table", "data"),
-    [Input("run-lca-analysis", "n_clicks"), Input("url", "pathname")],
-    State("table-store", "data"),
-    State("impact-values-store", "data"),
-    prevent_initial_call=True
-)
-def update_lca_result(run_clicks, pathname, input_materials, impact_db):
-    category_keys = {
-        "원료물질": "raw_material",
-        "보조물질": "additive",
-        "에너지": "energy",
-        "유틸리티": "utility",
-        "수송": "transport",
-        "폐기물처리": "waste"
-    }
-    lca_result = {cat: {k: 0 for k in category_keys.values()} for cat, _ in impact_categories}
-    lca_total = {cat: 0 for cat, _ in impact_categories}
-    for inp in input_materials:
-        try:
-            amount = float(inp["amount"])
-        except (ValueError, TypeError):
-            continue
-        matched = False
-        for row in impact_db:
-            if (row["DB명"].strip() == inp["db"].strip() and 
-                row["국가"].strip() == inp["country"].strip()):
-                matched = True
-                db_row = row
-                break
-        if not matched:
-            continue
-        cat_key = category_keys.get(inp["category"])
-        if not cat_key:
-            continue
-        # 단위 변환
-        input_unit = inp.get("unit")
-        db_unit = inp.get("dbunit")
-        unit_factor = 1.0
-        if input_unit and db_unit:
-            iu = input_unit.strip().lower()
-            du = db_unit.strip().lower()
-            if du == "kg" and iu == "g":
-                unit_factor = 1/1000
-            elif du == "kg" and iu == "ton":
-                unit_factor = 1000
-            elif du == "g" and iu == "kg":
-                unit_factor = 1000
-            elif du == "ton" and iu == "kg":
-                unit_factor = 1/1000
-            # 필요시 더 다양한 단위 변환 추가
-        for cat, _ in impact_categories:
-            if cat in db_row:
-                value = db_row[cat] * amount * unit_factor
-                lca_total[cat] += value
-                lca_result[cat][cat_key] += value
-
-    # result_table 생성
-    result_table = []
-    for idx, (cat, unit) in enumerate(impact_categories, 1):
-        row = {
-            "no": idx,
-            "impact": cat,
-            "unit": unit,
-            "total": f"{lca_total[cat]:.2E}",
-            "raw_material": f"{lca_result[cat]['raw_material']:.2E}",
-            "additive": f"{lca_result[cat]['additive']:.2E}",
-            "energy": f"{lca_result[cat]['energy']:.2E}",
-            "utility": f"{lca_result[cat]['utility']:.2E}",
-            "transport": f"{lca_result[cat]['transport']:.2E}",
-            "waste": f"{lca_result[cat]['waste']:.2E}"
-        }
-        result_table.append(row)
-    return result_table
- 
-
-if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', port=8050)

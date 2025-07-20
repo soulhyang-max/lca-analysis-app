@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import json
 import os
+import plotly.express as px
 
 impact_db = [
   {
@@ -1700,11 +1701,20 @@ sidebar = html.Div(
                 dbc.NavLink("에너지/유틸리티", href="/energy", active="exact"),
                 dbc.NavLink("원료수송", href="/transport", active="exact"),
                 dbc.NavLink("DB목록", href="/db", active="exact"),
-                dbc.NavLink("LCA 분석결과", href="/lca", active="exact"),
+                dbc.NavLink(
+                    "LCA 분석결과",
+                    href="/lca",
+                    active="exact",
+                    style={"fontWeight": "bold", "marginLeft": "12px"}
+                ),
             ],
             vertical=True,
             pills=True,
         ),
+        html.Div([
+            html.Img(src="/assets/eco_leaf.png", style={"height": "32px", "marginTop": "12px"}),
+            html.Img(src="/assets/co2_green.png", style={"height": "32px", "marginLeft": "8px"})
+        ], style={"display": "flex", "justifyContent": "center"})
     ],
     style={
         "position": "fixed",
@@ -1895,7 +1905,16 @@ def render_page(pathname):
                 style_table={'margin-top': '20px', 'margin-bottom': '20px'},
                 page_size=25,
             ),
-            html.P("※ 각 분류별 LCA 결과값이 여기 표에 표시됩니다. 숫자 입력은 자동 계산됩니다."),
+            html.H4("환경영향 분포 파이차트"),
+            dcc.Graph(id="impact-pie-chart"),
+            html.H4("분류별 환경영향 막대그래프"),
+            dcc.Graph(id="impact-bar-chart"),
+            html.Hr(),
+            html.Div([
+                html.Img(src="/assets/eco_leaf.png", style={"height": "80px", "marginRight": "20px"}),
+                html.Img(src="/assets/co2_green.png", style={"height": "80px"}),
+            ], style={"display": "flex", "justifyContent": "center", "alignItems": "center", "marginTop": "2rem"}),
+            html.P("※ 친환경/온실가스 이미지는 assets 폴더에 eco_leaf.png, co2_green.png 등으로 저장해 주세요.", style={"textAlign": "center", "fontSize": "0.95em"})
         ], fluid=True)
 
     elif pathname == "/":
@@ -2243,6 +2262,32 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
         result_table.append(row)
     return result_table
  
+
+@app.callback(
+    Output("impact-pie-chart", "figure"),
+    Input("lca-result-table", "data")
+)
+def update_pie_chart(data):
+    fig = px.pie(
+        names=["온실가스", "에너지", "수질오염", "대기오염"],
+        values=[45, 30, 15, 10],
+        title="환경영향 분포"
+    )
+    fig.update_traces(textinfo='percent+label')
+    return fig
+
+@app.callback(
+    Output("impact-bar-chart", "figure"),
+    Input("lca-result-table", "data")
+)
+def update_bar_chart(data):
+    fig = px.bar(
+        x=["원료물질", "에너지", "수송", "폐기물처리"],
+        y=[60, 25, 10, 5],
+        labels={"x": "분류", "y": "영향값"},
+        title="분류별 환경영향"
+    )
+    return fig
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0', port=8050)

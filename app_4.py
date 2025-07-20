@@ -1700,7 +1700,12 @@ sidebar = html.Div(
                 dbc.NavLink("에너지/유틸리티", href="/energy", active="exact"),
                 dbc.NavLink("원료수송", href="/transport", active="exact"),
                 dbc.NavLink("DB목록", href="/db", active="exact"),
-                dbc.NavLink("LCA 분석결과", href="/lca", active="exact"),
+                dbc.NavLink(
+                    "LCA 분석결과",
+                    href="/lca",
+                    active="exact",
+                    style={"fontWeight": "bold", "marginLeft": "12px"}
+                ),
             ],
             vertical=True,
             pills=True,
@@ -1724,17 +1729,13 @@ app = dash.Dash(__name__, external_stylesheets=external_fonts, suppress_callback
 server = app.server
 app.layout = html.Div([
     dcc.Location(id="url"),
-    dcc.Store(id="table-store", data=load_material_data(), storage_type="session"),            # 투입물 테이블 데이터
-    dcc.Store(id="impact-values-store", data=impact_db),
-    dcc.Store(id="db-data", data=sample_db_data.to_dict("records"), storage_type="session"),
-    dcc.Store(id="db-edit-store", data=sample_db_data.to_dict("records"), storage_type="session"),
-    dcc.Store(id="selected-db", data=None, storage_type="session"),
+    dcc.Store(id="auth-store", data={"logged_in": False, "username": None}),
     sidebar,
     html.Div(id="page-content", style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"}),
 ], style={"fontFamily": "Roboto, Arial, sans-serif"})
 
 # ─── 페이지 렌더링 ─────────────────────────────────────
-def render_page(pathname):
+def render_page(pathname, logged_in):
     if pathname == "/inputs":
         return dbc.Container([
             html.H2("투입물 입력"),
@@ -1895,11 +1896,22 @@ def render_page(pathname):
                 style_table={'margin-top': '20px', 'margin-bottom': '20px'},
                 page_size=25,
             ),
-            html.P("※ 각 분류별 LCA 결과값이 여기 표에 표시됩니다. 숫자 입력은 자동 계산됩니다."),
+            html.H4("환경영향 분포 파이차트"),
+            dcc.Graph(id="impact-pie-chart"),  # 콜백에서 figure 제공
+            html.H4("분류별 환경영향 막대그래프"),
+            dcc.Graph(id="impact-bar-chart"),  # 콜백에서 figure 제공
+            html.H4("영향범주별 상세 분석 스택바"),
+            dcc.Graph(id="impact-detailed-chart"),  # 콜백에서 figure 제공
+
+            html.Hr(),
+            html.Div([
+                html.Img(src="/assets/eco_leaf.png", style={"height": "80px", "marginRight": "20px"}),
+                html.Img(src="/assets/co2_green.png", style={"height": "80px"}),
+            ], style={"display": "flex", "justifyContent": "center", "alignItems": "center", "marginTop": "2rem"}),
+            html.P("※ 친환경/온실가스 이미지는 assets 폴더에 eco_leaf.png, co2_green.png 등으로 저장해 주세요.", style={"textAlign": "center", "fontSize": "0.95em"})
         ], fluid=True)
 
-    elif pathname == "/":
-        # 첫화면: 히어로 섹션 + 로그인 버튼
+    if pathname == "/":
         return html.Div([
             html.Div([
                 html.I(className="fas fa-leaf hero-icon"),
@@ -1924,15 +1936,44 @@ def render_page(pathname):
                     ], className="hero-feature"),
                 ], className="hero-features"),
             ], className="hero-content"),
-            html.Button("로그인", id="login-button", className="login-btn", n_clicks=0, style={"position": "fixed", "top": "2rem", "right": "2rem", "zIndex": 1000}),
+            html.Button(
+                "로그아웃" if logged_in else "로그인",
+                id="login-logout-button",
+                className="login-btn" if not logged_in else "logout-btn",
+                n_clicks=0,
+                style={
+                    "position": "fixed",
+                    "top": "2rem",
+                    "right": "2rem",
+                    "zIndex": 1000,
+                    "backgroundColor": "#dc3545" if logged_in else "#007bff",
+                    "color": "white"
+                }
+            ),
         ], style={"display": "flex", "alignItems": "center", "justifyContent": "center", "minHeight": "100vh"})
-
+    elif pathname == "/login":
+        # 로그인/회원가입 폼
+        return html.Div([
+            html.Div([
+                html.H2("로그인", style={"fontWeight": "bold", "marginBottom": "1rem"}),
+                dcc.Tabs(id="auth-tabs", value="login", children=[
+                    dcc.Tab(label="로그인", value="login"),
+                    dcc.Tab(label="회원가입", value="signup"),
+                ]),
+                html.Div(id="auth-form-container"),
+                dbc.Button("메인으로", href="/", color="secondary", className="mt-3")
+            ], style={"maxWidth": "400px", "margin": "auto", "marginTop": "10vh", "padding": "2rem", "background": "#fff", "borderRadius": "12px", "boxShadow": "0 2px 12px rgba(0,0,0,0.08)"})
+        ], style={"background": "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)", "minHeight": "100vh"})
     return html.Div([html.H3("페이지 준비 중입니다.")])
 
 # ─── 페이지 전환 ────────────────────────────────
-@app.callback(Output("page-content", "children"), Input("url", "pathname"))
-def display_page(pathname):
-    return render_page(pathname)
+@app.callback(
+    Output("page-content", "children"),
+    [Input("url", "pathname"), Input("auth-store", "data")]
+)
+def display_page(pathname, auth_data):
+    logged_in = auth_data.get("logged_in", False)
+    return render_page(pathname, logged_in)
 
 # ─── DB목록 관리 테이블 동기화 ───────────────────
 @app.callback(
@@ -2243,6 +2284,113 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
         result_table.append(row)
     return result_table
  
+
+# 1. 로그인/로그아웃 버튼 클릭 시 auth-store와 URL을 함께 변경
+@app.callback(
+    [Output("auth-store", "data"), Output("url", "pathname")],
+    Input("login-logout-button", "n_clicks"),
+    State("auth-store", "data"),
+    prevent_initial_call=True
+)
+def handle_login_logout(n_clicks, auth_data):
+    if n_clicks:
+        if auth_data.get("logged_in", False):
+            # 로그아웃
+            return {"logged_in": False, "username": None}, "/"
+        else:
+            # 로그인 화면으로 이동
+            return auth_data, "/login"
+    return dash.no_update, dash.no_update
+
+# 2. 로그인 성공 시 auth-store True로 변경 및 메인으로 이동
+@app.callback(
+    [Output("login-message", "children"), Output("auth-store", "data"), Output("url", "pathname")],
+    Input("login-submit-btn", "n_clicks"),
+    State("login-username", "value"),
+    State("login-password", "value"),
+    State("auth-store", "data"),
+    prevent_initial_call=True
+)
+def handle_login(n_clicks, username, password, auth_data):
+    if n_clicks:
+        if not username or not password:
+            return dbc.Alert("아이디와 비밀번호를 입력하세요.", color="danger"), auth_data, dash.no_update
+        # users.json에서 사용자 확인
+        if os.path.exists("users.json"):
+            with open("users.json", "r", encoding="utf-8") as f:
+                users = json.load(f)
+        else:
+            users = {}
+        if username in users and users[username] == password:
+            return dbc.Alert("로그인 성공!", color="success"), {"logged_in": True, "username": username}, "/"
+        else:
+            return dbc.Alert("아이디 또는 비밀번호가 올바르지 않습니다.", color="danger"), auth_data, dash.no_update
+    return "", auth_data, dash.no_update
+
+# 3. display_page 콜백에서 auth-store 값을 항상 반영
+@app.callback(
+    Output("page-content", "children"),
+    [Input("url", "pathname"), Input("auth-store", "data")]
+)
+def display_page(pathname, auth_data):
+    logged_in = auth_data.get("logged_in", False)
+    return render_page(pathname, logged_in)
+
+# 4. 로그인/회원가입 폼 토글
+@app.callback(
+    Output("auth-form-container", "children"),
+    Input("auth-tabs", "value")
+)
+def render_auth_form(tab):
+    if tab == "login":
+        return html.Div([
+            dbc.Input(id="login-username", placeholder="아이디", type="text", className="mb-2"),
+            dbc.Input(id="login-password", placeholder="비밀번호", type="password", className="mb-2"),
+            dbc.Button("로그인", id="login-submit-btn", color="primary", className="mb-2", n_clicks=0),
+            html.Div(id="login-message", style={"marginTop": "0.5rem"})
+        ])
+    else:
+        return html.Div([
+            dbc.Input(id="signup-username", placeholder="아이디", type="text", className="mb-2"),
+            dbc.Input(id="signup-password", placeholder="비밀번호", type="password", className="mb-2"),
+            dbc.Input(id="signup-password-confirm", placeholder="비밀번호 확인", type="password", className="mb-2"),
+            dbc.Button("회원가입", id="signup-submit-btn", color="success", className="mb-2", n_clicks=0),
+            html.Div(id="signup-message", style={"marginTop": "0.5rem"})
+        ])
+
+# 4. 로그인/회원가입 처리 콜백 (예시: users.json 사용)
+import json
+import os
+
+@app.callback(
+    Output("signup-message", "children"),
+    Input("signup-submit-btn", "n_clicks"),
+    State("signup-username", "value"),
+    State("signup-password", "value"),
+    State("signup-password-confirm", "value"),
+    prevent_initial_call=True
+)
+def handle_signup(n_clicks, username, password, password_confirm):
+    if n_clicks:
+        if not username or not password or not password_confirm:
+            return dbc.Alert("모든 필드를 입력하세요.", color="danger")
+        if password != password_confirm:
+            return dbc.Alert("비밀번호가 일치하지 않습니다.", color="danger")
+        if len(password) < 6:
+            return dbc.Alert("비밀번호는 6자 이상이어야 합니다.", color="danger")
+        # users.json에 사용자 저장
+        if os.path.exists("users.json"):
+            with open("users.json", "r", encoding="utf-8") as f:
+                users = json.load(f)
+        else:
+            users = {}
+        if username in users:
+            return dbc.Alert("이미 존재하는 아이디입니다.", color="danger")
+        users[username] = password
+        with open("users.json", "w", encoding="utf-8") as f:
+            json.dump(users, f, ensure_ascii=False, indent=2)
+        return dbc.Alert("회원가입 성공! 이제 로그인하세요.", color="success")
+    return ""
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0', port=8050)

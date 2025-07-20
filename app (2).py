@@ -1,9 +1,45 @@
 import dash
-from dash import html, dcc, Input, Output, State, dash_table, callback_context
+from dash import html, dcc, Input, Output, State, dash_table, callback_context, ALL
 import dash_bootstrap_components as dbc
 import pandas as pd
 import json
 import os
+from flask import Flask, render_template, redirect, url_for, request
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+import requests
+from datetime import datetime
+
+USER_FILE = 'users.json'
+
+def load_users():
+    if os.path.exists(USER_FILE):
+        with open(USER_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+def save_users(users):
+    with open(USER_FILE, 'w', encoding='utf-8') as f:
+        json.dump(users, f, ensure_ascii=False, indent=2)
+
+def init_users_file():
+    """사용자 데이터 파일이 없으면 초기화"""
+    if not os.path.exists(USER_FILE):
+        save_users({})
+        print(f"사용자 데이터 파일이 생성되었습니다: {USER_FILE}")
+
+class User(UserMixin):
+    def __init__(self, id, password_hash):
+        self.id = id
+        self.password_hash = password_hash
+    def get_id(self):
+        return self.id
+
+def get_user(user_id):
+    users = load_users()
+    if user_id in users:
+        return User(user_id, users[user_id]['password_hash'])
+    return None
 
 impact_db = [
   {
@@ -1690,215 +1726,75 @@ lca_columns = [
 # ─── 사이드바 ────────────────────────────────────────
 sidebar = html.Div(
     [
-        html.H2("LCA 분석", className="display-6", style={"fontSize": "1.5rem"}),
-        html.Hr(),
+        html.H2("LCA 분석", className="display-6", style={
+            "fontSize": "1.5rem",
+            "color": "#2d3748",
+            "fontWeight": "600",
+            "marginBottom": "1rem"
+        }),
+        html.Hr(style={"borderColor": "#e2e8f0", "marginBottom": "1.5rem"}),
         dbc.Nav(
             [
-                dbc.NavLink("기본정보", href="/", active="exact"),
-                dbc.NavLink("투입물", href="/inputs", active="exact"),
-                dbc.NavLink("산출물", href="/outputs", active="exact"),
-                dbc.NavLink("에너지/유틸리티", href="/energy", active="exact"),
-                dbc.NavLink("원료수송", href="/transport", active="exact"),
-                dbc.NavLink("DB목록", href="/db", active="exact"),
-                dbc.NavLink("LCA 분석결과", href="/lca", active="exact"),
+                dbc.NavLink([
+                    html.I(className="fas fa-chart-line me-2"),
+                    "대시보드"
+                ], href="/", active="exact", className="nav-link"),
+                dbc.NavLink([
+                    html.I(className="fas fa-plus-circle me-2"),
+                    "투입물 입력"
+                ], href="/inputs", active="exact", className="nav-link"),
+                dbc.NavLink([
+                    html.I(className="fas fa-database me-2"),
+                    "DB 관리"
+                ], href="/db", active="exact", className="nav-link"),
+                dbc.NavLink([
+                    html.I(className="fas fa-chart-bar me-2"),
+                    "LCA 분석결과"
+                ], href="/lca", active="exact", className="nav-link"),
             ],
             vertical=True,
             pills=True,
+            className="sidebar"
         ),
     ],
     style={
         "position": "fixed",
         "top": 0, "left": 0, "bottom": 0,
         "width": "16rem", "padding": "2rem 1rem",
-        "background-color": "#f8f9fa",
+        "zIndex": "1000"
     },
 )
 
 # ─── 앱 레이아웃 ──────────────────────────────────────
 
-external_fonts = [
+external_stylesheets = [
     "https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap",
-    dbc.themes.BOOTSTRAP
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css",
+    dbc.themes.BOOTSTRAP,
+    "/assets/custom.css"
 ]
-app = dash.Dash(__name__, external_stylesheets=external_fonts, suppress_callback_exceptions=True)
-server = app.server
+
+server = Flask(__name__)
+app = dash.Dash(__name__, server=server, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
+
+login_manager = LoginManager()
+login_manager.init_app(server)
+server.config['SECRET_KEY'] = 'your-secret-key-here-change-in-production'
+
+@login_manager.user_loader
+def user_loader(user_id):
+    return get_user(user_id)
+
+# 항상 모든 인증 관련 컴포넌트가 레이아웃에 존재하도록 포함
 app.layout = html.Div([
-    dcc.Location(id="url"),
-    dcc.Store(id="table-store", data=load_material_data(), storage_type="session"),            # 투입물 테이블 데이터
-    dcc.Store(id="impact-values-store", data=impact_db),
-    dcc.Store(id="db-data", data=sample_db_data.to_dict("records"), storage_type="session"),
-    dcc.Store(id="db-edit-store", data=sample_db_data.to_dict("records"), storage_type="session"),
-    dcc.Store(id="selected-db", data=None, storage_type="session"),
+    dcc.Location(id="url", refresh=False),
     sidebar,
-    html.Div(id="page-content", style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"}),
-], style={"fontFamily": "Roboto, Arial, sans-serif"})
+    html.Div(id="page-content", style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"})
+])
 
 # ─── 페이지 렌더링 ─────────────────────────────────────
 def render_page(pathname):
-    if pathname == "/inputs":
-        return dbc.Container([
-            html.H2("투입물 입력"),
-            dbc.Row([dbc.Label("물질명", width=2),
-                     dbc.Col(dbc.Input(id="material-name", type="text", placeholder="물질명을 입력하세요"), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("투입량", width=2),
-                     dbc.Col(dbc.Input(id="material-amount", type="number", placeholder="숫자를 입력하세요"), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("단위", width=2),
-                     dbc.Col(dcc.Dropdown(
-                         id="material-unit",
-                         options=[{"label": u, "value": u} for u in ["g", "kg", "ton", "m³", "L", "kWh", "MJ"]],
-                         placeholder="단위를 선택하세요"
-                     ), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("분류", width=2),
-                     dbc.Col(dcc.Dropdown(
-                         id="material-category",
-                         options=[
-                             {"label": "원료물질", "value": "원료물질"},
-                             {"label": "보조물질", "value": "보조물질"},
-                             {"label": "에너지", "value": "에너지"},
-                             {"label": "유틸리티", "value": "유틸리티"},
-                             {"label": "수송", "value": "수송"},
-                             {"label": "폐기물처리", "value": "폐기물처리"},
-                         ],
-                         placeholder="분류를 선택하세요"
-                     ), width=4)], className="mb-3"),
-            dbc.Row([
-                dbc.Label("연결 DB", width=2),
-                dbc.Col(dbc.Input(id="material-db", type="text", placeholder="선택된 DB명", disabled=True), width=4),
-                dbc.Col(dbc.Button("연결 DB 검색", id="open-db-search", color="info"), width="auto"),
-            ], className="mb-3"),
-            dbc.Row([dbc.Label("국가", width=2),
-                 dbc.Col(dcc.Dropdown(
-                    id="material-country",
-                    options=[],  # DB 선택 시 자동으로 채워짐
-                    placeholder="국가를 선택하세요"
-                ), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("단위", width=2),
-                     dbc.Col(dbc.Input(id="material-dbunit", type="text", placeholder="DB 단위 (자동 적용 예정)", disabled=True), width=4)], className="mb-3"),
-            dbc.Row([
-                dbc.Col(dbc.Button("추가", id="add-row", color="primary"), width="auto"),
-                dbc.Col(dbc.Button("삭제", id="delete-row", color="danger"), width="auto"),
-                dbc.Col(dbc.Button("저장", id="save-data", color="success"), width="auto"),
-                dbc.Col(html.Div(id="analysis-result"), width=6),
-            ], className="mb-3"),
-            dash_table.DataTable(
-                id="material-table",
-                columns=[
-                    {"name": "물질명", "id": "name"},
-                    {"name": "투입량", "id": "amount"},
-                    {"name": "단위", "id": "unit"},
-                    {"name": "분류", "id": "category"},
-                    {"name": "연결 DB", "id": "db"},
-                    {"name": "국가", "id": "country"},
-                    {"name": "DB단위", "id": "dbunit"},
-                ],
-                data=[], row_selectable="multi", selected_rows=[],
-                editable=True,
-                style_cell={'textAlign':'center','padding':'5px','fontFamily': 'Roboto, Arial, sans-serif'},
-                style_header={'textAlign':'center','fontWeight':'bold','backgroundColor':'#f1f1f1', 'fontFamily': 'Roboto, Arial, sans-serif'},
-                style_table={'margin-top':'10px'}
-            ),
-            dbc.Modal([
-                dbc.ModalHeader("DB 검색"),
-                dbc.ModalBody([
-                    dbc.Row([
-                        dbc.Col(dcc.Dropdown(
-                            id="db-search-category",
-                            options=[
-                                {"label": "전체", "value": ""},
-                                {"label": "원료물질", "value": "원료물질"},
-                                {"label": "보조물질", "value": "보조물질"},
-                                {"label": "에너지", "value": "에너지"},
-                                {"label": "유틸리티", "value": "유틸리티"},
-                                {"label": "수송", "value": "수송"},
-                                {"label": "폐기물처리", "value": "폐기물처리"},
-                            ],
-                            value="",
-                            placeholder="분류 선택(전체)",
-                            style={"marginBottom": "10px"}
-                        ), width=12)
-                    ]),
-                    dbc.Input(id="db-search-input", type="text", placeholder="DB명을 입력하세요", className="mb-2"),
-                    html.Div(id="db-search-results"),
-                    html.Hr(),
-                    html.Div("선택된 DB명:", style={"marginTop": "10px"}),
-                    html.Div(id="selected-db-name", style={"fontWeight": "bold", "marginBottom": "10px"})
-                ]),
-                dbc.ModalFooter([
-                    dbc.Button("확인", id="confirm-db-selection", color="primary", className="me-2"),
-                    dbc.Button("닫기", id="close-db-search", color="secondary")
-                ])
-            ], id="db-search-modal", is_open=False, centered=True, style={
-                "maxWidth": "900px",
-                "width": "98%",
-                "position": "fixed",
-                "left": "50%",
-                "top": "2vh",
-                "transform": "translateX(-50%)",
-                "zIndex": 1050
-            }),  # 중앙 정렬 옵션 추가
-        ], fluid=True)
-
-    elif pathname == "/db":
-        return dbc.Container([
-            html.H2("DB목록 관리"),
-            dbc.Row([
-                dbc.Col(dbc.Button("행 추가", id="add-db-row", color="primary"), width="auto"),
-                dbc.Col(dbc.Button("선택 행 삭제", id="delete-selected-rows", color="danger"), width="auto"),
-            ], className="mb-3"),
-            dash_table.DataTable(
-                id="db-edit-table",
-                columns=[
-                    {"name": "물질명", "id": "물질명", "editable": True},
-                    {"name": "분류", "id": "분류", "editable": True},
-                    {"name": "DB명", "id": "DB명", "editable": True},
-                    {"name": "국가", "id": "국가", "editable": True},
-                    {"name": "단위", "id": "단위", "editable": True},
-                ],
-                data=[],  # 콜백에서 채움
-                editable=True,
-                row_deletable=True,
-                row_selectable="multi",
-                selected_rows=[],
-                sort_action="native",
-                style_cell={'textAlign': 'left', 'padding': '5px'},
-                style_header={'fontWeight': 'bold', 'backgroundColor': '#f1f1f1', "cursor":"pointer"},
-                style_table={'margin-top': '10px'},
-                page_size=20,
-            ),
-            html.P("사용법:"),
-            html.Ul([
-                html.Li("셀 클릭 후 직접 입력/수정 가능합니다."),
-                html.Li("행 우측 휴지통 아이콘으로 한 줄씩 삭제할 수 있습니다."),
-                html.Li("여러 행을 Ctrl/Shift+클릭으로 선택 후 '선택 행 삭제' 버튼으로 한 번에 삭제할 수 있습니다."),
-                html.Li("헤더를 클릭하면 해당 컬럼 기준으로 정렬됩니다."),
-                html.Li("변경 사항은 다른 메뉴로 이동할 때 자동으로 저장됩니다."),
-            ], style={"fontSize":"0.95em"}),
-        ], fluid=True)
-
-    elif pathname == "/lca":
-        return dbc.Container([
-            html.H2("LCA 분석결과"),
-            dbc.Row([
-                dbc.Col(dbc.Button("LCA 분석 실행", id="run-lca-analysis", color="primary"), width="auto"),
-            ], className="mb-3"),
-            dash_table.DataTable(
-                id='lca-result-table',
-                columns=lca_columns,
-                data=[],  # 콜백에서 채움
-                style_cell={'textAlign': 'center', 'padding': '6px', 'font-size': '1em', 'fontFamily': 'Roboto, Arial, sans-serif'},
-                style_header={
-                    'textAlign': 'center',
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#d1e1fa',
-                    'fontFamily': 'Roboto, Arial, sans-serif'
-                },
-                style_table={'margin-top': '20px', 'margin-bottom': '20px'},
-                page_size=25,
-            ),
-            html.P("※ 각 분류별 LCA 결과값이 여기 표에 표시됩니다. 숫자 입력은 자동 계산됩니다."),
-        ], fluid=True)
-
-    elif pathname == "/":
+    if pathname == "/":
         # 첫화면: 히어로 섹션 + 로그인 버튼
         return html.Div([
             html.Div([
@@ -1926,323 +1822,513 @@ def render_page(pathname):
             ], className="hero-content"),
             html.Button("로그인", id="login-button", className="login-btn", n_clicks=0, style={"position": "fixed", "top": "2rem", "right": "2rem", "zIndex": 1000}),
         ], style={"display": "flex", "alignItems": "center", "justifyContent": "center", "minHeight": "100vh"})
+    elif pathname == "/inputs":
+        return html.Div([
+            sidebar,
+            html.Div([
+                html.H2("투입물 입력 페이지"),
+                dbc.Row([
+                    dbc.Col([
+                        dbc.Input(id="material-name", placeholder="물질명", type="text", style={"marginBottom": "0.5rem"}),
+                        dbc.Input(id="material-amount", placeholder="투입량", type="number", style={"marginBottom": "0.5rem"}),
+                        dbc.Input(id="material-unit", placeholder="단위", type="text", style={"marginBottom": "0.5rem"}),
+                        dbc.Input(id="material-category", placeholder="분류", type="text", style={"marginBottom": "0.5rem"}),
+                        dbc.Input(id="material-db", placeholder="DB명", type="text", style={"marginBottom": "0.5rem"}),
+                        dbc.Input(id="material-country", placeholder="국가", type="text", style={"marginBottom": "0.5rem"}),
+                        dbc.Input(id="material-dbunit", placeholder="DB단위", type="text", style={"marginBottom": "0.5rem"}),
+                        dbc.Button("추가", id="add-row", color="primary", n_clicks=0, style={"marginRight": "0.5rem"}),
+                        dbc.Button("삭제", id="delete-row", color="danger", n_clicks=0),
+                        dbc.Button("저장", id="save-data", color="success", n_clicks=0, style={"marginLeft": "0.5rem"}),
+                        html.Div(id="analysis-result", style={"marginTop": "1rem"})
+                    ], width=4),
+                    dbc.Col([
+                        dash_table.DataTable(
+                            id="material-table",
+                            columns=[
+                                {"name": "물질명", "id": "name"},
+                                {"name": "투입량", "id": "amount"},
+                                {"name": "단위", "id": "unit"},
+                                {"name": "분류", "id": "category"},
+                                {"name": "DB명", "id": "db"},
+                                {"name": "국가", "id": "country"},
+                                {"name": "DB단위", "id": "dbunit"},
+                            ],
+                            data=[],
+                            row_selectable="multi",
+                            selected_rows=[],
+                            style_table={"overflowX": "auto"},
+                            style_cell={"textAlign": "center"},
+                        )
+                    ], width=8)
+                ])
+            ], style={"marginLeft": "18rem", "padding": "2rem 1rem"})
+        ])
+    elif pathname == "/db":
+        return html.Div([
+            sidebar,
+            html.Div([
+                html.H2("DB 관리 페이지"),
+                dbc.Button("행 추가", id="add-db-row", color="primary", n_clicks=0, style={"marginRight": "0.5rem"}),
+                dbc.Button("선택 삭제", id="delete-selected-rows", color="danger", n_clicks=0),
+                dash_table.DataTable(
+                    id="db-edit-table",
+                    columns=[
+                        {"name": "물질명", "id": "물질명"},
+                        {"name": "분류", "id": "분류"},
+                        {"name": "DB명", "id": "DB명"},
+                        {"name": "국가", "id": "국가"},
+                        {"name": "단위", "id": "단위"},
+                    ],
+                    data=[],
+                    row_selectable="multi",
+                    selected_rows=[],
+                    style_table={"overflowX": "auto"},
+                    style_cell={"textAlign": "center"},
+                )
+            ], style={"marginLeft": "18rem", "padding": "2rem 1rem"})
+        ])
+    elif pathname == "/lca":
+        return html.Div([
+            sidebar,
+            html.Div([
+                html.H2("LCA 분석결과 페이지"),
+                dash_table.DataTable(
+                    id="lca-result-table",
+                    columns=[
+                        {"name": "No.", "id": "no"},
+                        {"name": "Impact category", "id": "impact"},
+                        {"name": "Unit", "id": "unit"},
+                        {"name": "TOTAL", "id": "total"},
+                        {"name": "원료물질", "id": "raw_material"},
+                        {"name": "보조물질", "id": "additive"},
+                        {"name": "에너지", "id": "energy"},
+                        {"name": "유틸리티", "id": "utility"},
+                        {"name": "수송", "id": "transport"},
+                        {"name": "폐기물처리", "id": "waste"},
+                    ],
+                    data=[],
+                    style_table={"overflowX": "auto"},
+                    style_cell={"textAlign": "center"},
+                ),
+                html.Div([
+                    html.H4("환경영향 분포 파이차트"),
+                    dcc.Graph(id="impact-pie-chart"),
+                    html.H4("분류별 환경영향 막대그래프"),
+                    dcc.Graph(id="impact-bar-chart"),
+                    html.H4("영향범주별 상세 분석 스택바"),
+                    dcc.Graph(id="impact-detailed-chart"),
+                ], style={"marginTop": "2rem"})
+            ], style={"marginLeft": "18rem", "padding": "2rem 1rem"})
+        ])
+    else:
+        return html.Div([
+            html.H2("페이지를 찾을 수 없습니다."),
+            html.A("메인으로", href="/")
+        ], style={"textAlign": "center", "marginTop": "5rem"})
 
-    return html.Div([html.H3("페이지 준비 중입니다.")])
+# ─── 페이지 전환 콜백 ────────────────────────────────
+@app.callback(
+    [Output("sidebar-container", "style"),
+     Output("page-content", "style"),
+     Output("hero-section", "style"),
+     Output("auth-forms-container", "style"),
+     Output("login-button", "style"),
+     Output("show-login-btn", "style"),
+     Output("show-signup-btn", "style"),
+     Output("login-form", "style"),
+     Output("signup-form", "style"),
+     Output("auth-message", "style")],
+    [Input("url", "pathname")]
+)
+def update_page_visibility(pathname):
+    styles = render_page(pathname)
+    # auth-forms-container 표시 제어
+    if pathname == "/login":
+        auth_forms_style = {
+            "display": "flex",
+            "flexDirection": "column",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "minHeight": "100vh",
+            "background": "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)"
+        }
+    else:
+        auth_forms_style = {"display": "none"}
+    return (
+        styles["sidebar-container"],
+        styles["page-content"],
+        styles["hero-section"],
+        auth_forms_style,
+        styles["login-button"],
+        styles["show-login-btn"],
+        styles["show-signup-btn"],
+        styles["login-form"],
+        styles["signup-form"],
+        styles["auth-message"]
+    )
 
-# ─── 페이지 전환 ────────────────────────────────
-@app.callback(Output("page-content", "children"), Input("url", "pathname"))
-def display_page(pathname):
+# ─── 인증/탭/로그인/회원가입 콜백 (중복 없이 함수 내부에 완전히 포함) ──────────
+@app.callback(
+    [
+        Output("login-form", "className"),
+        Output("signup-form", "className"),
+        Output("show-login-btn", "className"),
+        Output("show-signup-btn", "className"),
+        Output("auth-message", "children"),
+        Output("auth-message", "className"),
+        Output("url", "pathname", allow_duplicate=True)
+    ],
+    [
+        Input("login-button", "n_clicks"),
+        Input("show-login-btn", "n_clicks"),
+        Input("show-signup-btn", "n_clicks"),
+        Input("login-submit-btn", "n_clicks"),
+        Input("signup-submit-btn", "n_clicks")
+    ],
+    [
+        State("login-username", "value"),
+        State("login-password", "value"),
+        State("signup-username", "value"),
+        State("signup-password", "value"),
+        State("signup-password-confirm", "value")
+    ],
+    prevent_initial_call='initial_duplicate'
+)
+def handle_auth_actions(login_btn_clicks, login_switch_clicks, signup_switch_clicks, login_submit_clicks, signup_submit_clicks,
+                       login_username, login_password,
+                       signup_username, signup_password, signup_password_confirm):
+    ctx = dash.callback_context
+    button_id = ctx.triggered[0]['prop_id'].split('.')[0] if ctx.triggered else None
+
+    # 상단 로그인 버튼 클릭 시 로그인 페이지로 이동 (n_clicks가 0이면 아무 동작 안 함)
+    if button_id == "login-button" and login_btn_clicks:
+        return dash.no_update, dash.no_update, dash.no_update, dash.no_update, "", "", "/login"
+
+    # 탭 전환 처리
+    if button_id == "show-login-btn":
+        return "auth-form active", "auth-form", "auth-tab-btn active", "auth-tab-btn", "", "", dash.no_update
+    elif button_id == "show-signup-btn":
+        return "auth-form", "auth-form active", "auth-tab-btn", "auth-tab-btn active", "", "", dash.no_update
+
+    # 로그인 처리
+    elif button_id == "login-submit-btn":
+        if not login_username or not login_password:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update, "아이디와 비밀번호를 모두 입력해주세요.", "auth-message error", dash.no_update
+        try:
+            response = requests.post('/login', json={'username': login_username, 'password': login_password})
+            data = response.json()
+            print(data)  # 서버 응답 콘솔 출력
+            if data['success']:
+                # 인증 상태 안내 메시지
+                from flask_login import current_user
+                return dash.no_update, dash.no_update, dash.no_update, dash.no_update, f"로그인 성공! 인증 상태: {getattr(current_user, 'is_authenticated', False)}", "auth-message success", "/"
+            else:
+                return dash.no_update, dash.no_update, dash.no_update, dash.no_update, data['message'], "auth-message error", dash.no_update
+        except Exception as e:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update, "로그인 중 오류가 발생했습니다.", "auth-message error", dash.no_update
+
+    # 회원가입 처리
+    elif button_id == "signup-submit-btn":
+        if not signup_username or not signup_password or not signup_password_confirm:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update, "모든 필드를 입력해주세요.", "auth-message error", dash.no_update
+        if signup_password != signup_password_confirm:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update, "비밀번호가 일치하지 않습니다.", "auth-message error", dash.no_update
+        if len(signup_password) < 6:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update, "비밀번호는 최소 6자 이상이어야 합니다.", "auth-message error", dash.no_update
+        try:
+            response = requests.post('/signup', json={'username': signup_username, 'password': signup_password})
+            data = response.json()
+            print(data)
+            if data['success']:
+                from flask_login import current_user
+                return dash.no_update, dash.no_update, dash.no_update, dash.no_update, f"회원가입 성공! 인증 상태: {getattr(current_user, 'is_authenticated', False)}", "auth-message success", "/"
+            else:
+                return dash.no_update, dash.no_update, dash.no_update, dash.no_update, data['message'], "auth-message error", dash.no_update
+        except Exception as e:
+            return dash.no_update, dash.no_update, dash.no_update, dash.no_update, "회원가입 중 오류가 발생했습니다.", "auth-message error", dash.no_update
+
+    # 기본 반환 (초기 상태)
+    return "auth-form active", "auth-form", "auth-tab-btn active", "auth-tab-btn", "", "", dash.no_update
+
+# 전역 변수로 인증 상태 추적
+authenticated_users = set()
+
+# ─── 통계 카드 업데이트 콜백 ─────────────────────────────
+@app.callback(
+    [Output("total-impact", "children"),
+     Output("analysis-items", "children"),
+     Output("last-analysis", "children"),
+     Output("analysis-status", "children")],
+    [Input("run-lca-analysis", "n_clicks")],
+    [State("table-store", "data")],
+    prevent_initial_call=True
+)
+def update_statistics_cards(n_clicks, table_data):
+    if not n_clicks or not table_data:
+        return "0", "0", "미실행", "대기 중"
+    
+    # 총 환경영향 계산 (간단한 예시)
+    total_impact = len(table_data) * 100  # 실제로는 LCA 계산 결과를 사용
+    
+    # 분석 항목 수
+    analysis_items = len(table_data)
+    
+    # 최근 분석 시간
+    last_analysis = datetime.now().strftime("%H:%M")
+    
+    # 상태
+    status = "완료"
+    
+    return str(total_impact), str(analysis_items), last_analysis, status
+
+# ─── 그래프 업데이트 콜백 ─────────────────────────────
+@app.callback(
+    [Output("impact-pie-chart", "figure"),
+     Output("impact-bar-chart", "figure"),
+     Output("impact-detailed-chart", "figure")],
+    [Input("run-lca-analysis", "n_clicks")],
+    [State("table-store", "data")],
+    prevent_initial_call=True
+)
+def update_charts(n_clicks, table_data):
+    if not n_clicks or not table_data:
+        # 빈 그래프 반환
+        empty_fig = {
+            "data": [],
+            "layout": {
+                "title": "데이터가 없습니다",
+                "xaxis": {"title": ""},
+                "yaxis": {"title": ""},
+                "font": {"color": "#718096"},
+                "paper_bgcolor": "rgba(0,0,0,0)",
+                "plot_bgcolor": "rgba(0,0,0,0)"
+            }
+        }
+        return empty_fig, empty_fig, empty_fig
+    
+    # 샘플 데이터 생성 (실제로는 LCA 계산 결과 사용)
+    categories = ["원료물질", "보조물질", "에너지", "유틸리티", "수송", "폐기물처리"]
+    impact_values = [25, 15, 30, 10, 12, 8]  # 퍼센트
+    
+    # 파이 차트
+    pie_fig = {
+        "data": [{
+            "type": "pie",
+            "labels": categories,
+            "values": impact_values,
+            "hole": 0.4,
+            "marker": {
+                "colors": ["#6b7c93", "#a8b2d1", "#8b9dc3", "#7f9c9f", "#d4a574", "#c17f59"]
+            },
+            "textinfo": "label+percent",
+            "textposition": "outside"
+        }],
+        "layout": {
+            "title": {
+                "text": "환경영향 분포",
+                "font": {"color": "#2d3748", "size": 18}
+            },
+            "font": {"color": "#718096"},
+            "paper_bgcolor": "rgba(0,0,0,0)",
+            "plot_bgcolor": "rgba(0,0,0,0)",
+            "showlegend": True,
+            "legend": {"x": 0.02, "y": 0.98}
+        }
+    }
+    
+    # 막대 그래프
+    bar_fig = {
+        "data": [{
+            "type": "bar",
+            "x": categories,
+            "y": impact_values,
+            "marker": {
+                "color": ["#6b7c93", "#a8b2d1", "#8b9dc3", "#7f9c9f", "#d4a574", "#c17f59"],
+                "line": {"color": "#e2e8f0", "width": 1}
+            },
+            "text": [f"{v}%" for v in impact_values],
+            "textposition": "auto"
+        }],
+        "layout": {
+            "title": {
+                "text": "분류별 환경영향",
+                "font": {"color": "#2d3748", "size": 18}
+            },
+            "xaxis": {
+                "title": "분류",
+                "tickangle": -45,
+                "color": "#718096"
+            },
+            "yaxis": {
+                "title": "영향 비율 (%)",
+                "color": "#718096"
+            },
+            "font": {"color": "#718096"},
+            "paper_bgcolor": "rgba(0,0,0,0)",
+            "plot_bgcolor": "rgba(0,0,0,0)",
+            "bargap": 0.3
+        }
+    }
+    
+    # 상세 분석 그래프 (스택 바 차트)
+    impact_categories = ["기후변화", "산성화", "부영양화", "오존층파괴", "인체독성"]
+    detailed_data = []
+    
+    for i, category in enumerate(categories):
+        detailed_data.append({
+            "type": "bar",
+            "name": category,
+            "x": impact_categories,
+            "y": [impact_values[i] * 0.2, impact_values[i] * 0.15, impact_values[i] * 0.25, 
+                  impact_values[i] * 0.1, impact_values[i] * 0.3],
+            "marker": {"color": ["#6b7c93", "#a8b2d1", "#8b9dc3", "#7f9c9f", "#d4a574", "#c17f59"][i]}
+        })
+    
+    detailed_fig = {
+        "data": detailed_data,
+        "layout": {
+            "title": {
+                "text": "영향범주별 상세 분석",
+                "font": {"color": "#2d3748", "size": 18}
+            },
+            "xaxis": {
+                "title": "영향범주",
+                "color": "#718096"
+            },
+            "yaxis": {
+                "title": "영향 지수",
+                "color": "#718096"
+            },
+            "font": {"color": "#718096"},
+            "paper_bgcolor": "rgba(0,0,0,0)",
+            "plot_bgcolor": "rgba(0,0,0,0)",
+            "barmode": "stack",
+            "bargap": 0.2,
+            "showlegend": True,
+            "legend": {"x": 0.02, "y": 0.98}
+        }
+    }
+    
+    return pie_fig, bar_fig, detailed_fig
+
+@app.callback(
+    Output("auth-button-container", "children"),
+    [Input("url", "pathname")]
+)
+def update_auth_button(pathname):
+    # URL 변경 시 인증 상태 확인
+    if current_user.is_authenticated:
+        return dbc.Button([
+            html.I(className="fas fa-sign-out-alt me-2"),
+            "로그아웃"
+        ], id="logout-button", className="logout-btn")
+    else:
+        return dbc.Button([
+            html.I(className="fas fa-sign-in-alt me-2"),
+            "로그인"
+        ], id="login-button", className="login-btn")
+
+
+# ─── Flask 라우트 추가 ──────────────────────────────────
+@app.server.route('/login', methods=['POST'])
+def login_api():
+    from flask import request, redirect
+    try:
+        # 1. JSON 요청 처리
+        if request.is_json:
+            data = request.get_json()
+            username = data.get('username')
+            password = data.get('password')
+        # 2. Form 요청 처리
+        else:
+            username = request.form.get('username')
+            password = request.form.get('password')
+
+        if not username or not password:
+            return "아이디와 비밀번호를 모두 입력해주세요.", 400
+
+        users = load_users()
+        if username in users and check_password_hash(users[username]['password_hash'], password):
+            user = User(username, users[username]['password_hash'])
+            login_user(user)
+            # 로그인 성공 시 LCA 분석 대시보드로 리디렉션
+            return redirect('/lca')
+        else:
+            return "아이디 또는 비밀번호가 올바르지 않습니다.", 401
+
+    except Exception as e:
+        return f"로그인 중 오류가 발생했습니다: {str(e)}", 500
+
+@app.server.route('/signup', methods=['POST'])
+def signup_api():
+    from flask import request, redirect
+    try:
+        # 1. JSON 요청 처리
+        if request.is_json:
+            data = request.get_json()
+            username = data.get('username')
+            password = data.get('password')
+        # 2. Form 요청 처리
+        else:
+            username = request.form.get('username')
+            password = request.form.get('password')
+
+        if not username or not password:
+            return "모든 필드를 입력해주세요.", 400
+        if len(password) < 6:
+            return "비밀번호는 최소 6자 이상이어야 합니다.", 400
+
+        users = load_users()
+        if username in users:
+            return "이미 존재하는 아이디입니다.", 400
+
+        # 새 사용자 생성
+        password_hash = generate_password_hash(password)
+        users[username] = {
+            "password_hash": password_hash,
+            "created_at": str(pd.Timestamp.now())
+        }
+        save_users(users)
+        user = User(username, password_hash)
+        login_user(user)
+        # 회원가입 성공 시 LCA 분석 대시보드로 리디렉션
+        return redirect('/lca')
+    except Exception as e:
+        return f"회원가입 중 오류가 발생했습니다: {str(e)}", 500
+
+# 앱 시작 시 사용자 데이터 파일 초기화
+init_users_file()
+
+# ─── Flask 라우트: 인증 페이지 ─────────────────────
+@app.server.route('/auth', methods=['GET'])
+def auth_page():
+    try:
+        return render_template('auth_page.html')
+    except Exception:
+        return '<h2>로그인/회원가입 페이지가 준비 중입니다.</h2>'
+
+# ─── Dash 페이지 전환 콜백: 인증 분기 ──────────────
+@app.callback(
+    Output("page-content", "children"),
+    [Input("url", "pathname")]
+)
+def display_page_content(pathname):
+    protected_paths = ['/', '/inputs', '/db', '/lca']
+    if pathname in protected_paths and not current_user.is_authenticated:
+        return dcc.Location(href="/auth", id="force-auth-redirect")
     return render_page(pathname)
 
-# ─── DB목록 관리 테이블 동기화 ───────────────────
+# 로그인 버튼 클릭 시 /auth로 이동하는 콜백은 유지
 @app.callback(
-    Output("db-edit-table", "data"),
-    Input("db-edit-store", "data")
-)
-def show_db_table(db_edit_store_data):
-    return db_edit_store_data
-
-@app.callback(
-    Output("db-edit-store", "data"),
-    [Input("add-db-row", "n_clicks"), Input("delete-selected-rows", "n_clicks")],
-    State("db-edit-store", "data"),
-    State("db-edit-table", "selected_rows"),
+    Output("url", "pathname"),
+    Input("login-button", "n_clicks"),
     prevent_initial_call=True
 )
-def update_db_edit_store(add_click, delete_click, current_store, selected_rows):
-    ctx = callback_context
-    if not ctx.triggered:
-        return dash.no_update
-    trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    if trigger_id == "add-db-row":
-        new_row = {"물질명": "", "분류": "", "DB명": "", "국가": "", "단위": ""}
-        return current_store + [new_row]
-    elif trigger_id == "delete-selected-rows":
-        if selected_rows:
-            return [row for i, row in enumerate(current_store) if i not in selected_rows]
-        else:
-            return current_store
+def go_to_auth(n_clicks):
+    if n_clicks:
+        return "/auth"
     return dash.no_update
-
-# ─── DB 테이블 편집 콜백 (순환 의존성 방지) ───────────────────────────────
-@app.callback(
-    Output("db-edit-store", "data", allow_duplicate=True),
-    Input("db-edit-table", "data"),
-    State("db-edit-store", "data"),
-    prevent_initial_call=True
-)
-def update_db_from_table(table_data, current_store):
-    if table_data is not None and table_data != current_store:
-        return table_data
-    return dash.no_update
-
-# ─── DB목록 자동 저장 (페이지 이동 시) ───────────────────────────────
-@app.callback(
-    Output("db-data", "data"),
-    Input("url", "pathname"),
-    State("db-edit-store", "data"),
-    prevent_initial_call=True
-)
-def auto_save_db_list(pathname, db_edit_store_data):
-    # DB 페이지에서 다른 페이지로 이동할 때 자동 저장
-    if pathname != "/db" and db_edit_store_data:
-        # 파일로 저장
-        save_db_data(db_edit_store_data)
-        print("DB목록이 자동으로 저장되었습니다.")
-        return db_edit_store_data
-    return dash.no_update
-
-# ─── 투입물 입력 테이블 표시 ────────────────────────
-@app.callback(
-    Output("material-table", "data"),
-    Input("table-store", "data")
-)
-def show_material_table(table_data):
-    return table_data
-
-# ─── 투입물 추가/삭제 콜백 ──────────────────────────
-@app.callback(
-    Output("table-store", "data"),
-    [
-        Input("add-row", "n_clicks"),
-        Input("delete-row", "n_clicks"),
-    ],
-    [
-        State("material-name", "value"),
-        State("material-amount", "value"),
-        State("material-unit", "value"),
-        State("material-category", "value"),
-        State("material-db", "value"),
-        State("material-country", "value"),
-        State("material-dbunit", "value"),
-        State("table-store", "data"),
-        State("material-table", "selected_rows"),
-    ],
-    prevent_initial_call=True
-)
-def update_material_table(add_click, delete_click,
-                         name, amount, unit, category, db, country, dbunit,
-                         table_data, selected_rows):
-    ctx = callback_context
-    if not ctx.triggered:
-        return dash.no_update
-    trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    if trigger_id == "add-row":
-        if not all([name, amount, unit, category, db, country, dbunit]):
-            return table_data
-        new_row = {
-            "name": name,
-            "amount": amount,
-            "unit": unit,
-            "category": category,
-            "db": db,
-            "country": country,
-            "dbunit": dbunit
-        }
-        if table_data is None:
-            table_data = []
-        return table_data + [new_row]
-    elif trigger_id == "delete-row":
-        if selected_rows:
-            return [row for i, row in enumerate(table_data) if i not in selected_rows]
-        else:
-            return table_data
-    return dash.no_update
-
-# ─── 투입물 저장 알림 ──────────────────────────────
-@app.callback(
-    Output("analysis-result", "children"),
-    Input("save-data", "n_clicks"),
-    State("table-store", "data"),
-    prevent_initial_call=True
-)
-def save_material_data(n_clicks, table_data):
-    if n_clicks and table_data:
-        # 세션 저장 (파일 저장 아님)
-        print("투입물 데이터가 세션에 저장되었습니다.")
-        return dbc.Alert("투입물 데이터가 저장되었습니다", color="success", duration=3000)
-    return ""
-    return ""
-
-# ─── DB 검색 팝업 열고 닫기 ─────────────────────────
-@app.callback(
-    Output("db-search-modal", "is_open"),
-    Input("open-db-search", "n_clicks"),
-    Input("close-db-search", "n_clicks"),
-    Input("confirm-db-selection", "n_clicks"),
-    State("db-search-modal", "is_open"),
-    prevent_initial_call=True
-)
-def toggle_db_modal(open_click, close_click, confirm_click, is_open):
-    ctx = callback_context
-    if not ctx.triggered:
-        return is_open
-    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    if triggered_id in ["close-db-search", "confirm-db-selection"]:
-        return False
-    return True
-
-# ─── DB명 검색 결과 표시(분류 필터 추가) ────────────────
-@app.callback(
-    Output("db-search-results", "children"),
-    Input("db-search-input", "value"),
-    Input("db-search-category", "value"),
-    State("db-data", "data")
-)
-def search_db_list(keyword, selected_category, db_data):
-    if not keyword:
-        return "검색어를 입력하세요."
-    seen = set()
-    matches = []
-    for row in db_data:
-        if selected_category and row.get("분류") != selected_category:
-            continue
-        db_name = row["DB명"]
-        if keyword.lower() in db_name.lower() and db_name not in seen:
-            matches.append(row)
-            seen.add(db_name)
-    if not matches:
-        return "검색 결과가 없습니다."
-    return html.Ul([
-        html.Li(
-            dbc.Button(
-                row["DB명"],
-                id={"type": "select-db", "index": row["DB명"]},
-                color="link",
-                style={"justifyContent": "flex-start", "display": "flex", "textAlign": "left", "whiteSpace": "normal", "fontFamily": "Roboto, Arial, sans-serif"}
-            ),
-            style={"textAlign": "left", "paddingLeft": "0", "fontFamily": "Roboto, Arial, sans-serif"}
-        ) for row in matches
-    ], style={"textAlign": "left", "paddingLeft": "24px", "paddingRight": "24px", "fontFamily": "Roboto, Arial, sans-serif"})  # 좌우 여백 추가
-
-from dash.dependencies import ALL
-
-@app.callback(
-    Output("material-db", "value"),
-    Input("confirm-db-selection", "n_clicks"),
-    State("selected-db", "data"),
-    prevent_initial_call=True
-)
-def apply_selected_db(confirm_click, selected_db):
-    return selected_db
-
-@app.callback(
-    Output("material-country", "options"),
-    Input("material-db", "value"),
-    State("db-data", "data"),
-    prevent_initial_call=True
-)
-def update_country_options(selected_db, db_data):
-    if not selected_db:
-        return []
-    countries = list({row["국가"] for row in db_data if row["DB명"] == selected_db})
-    return [{"label": c, "value": c} for c in countries]
-
-@app.callback(
-    Output("material-dbunit", "value"),
-    Input("material-country", "value"),
-    State("material-db", "value"),
-    State("db-data", "data"),
-    prevent_initial_call=True
-)
-def update_dbunit(selected_country, selected_db, db_data):
-    if not selected_country or not selected_db:
-        return ""
-    for row in db_data:
-        if row["DB명"] == selected_db and row["국가"] == selected_country:
-            return row["단위"]
-    return ""
-
-@app.callback(
-    Output("selected-db", "data"),
-    Output("selected-db-name", "children"),
-    Input({"type": "select-db", "index": ALL}, "n_clicks"),
-    prevent_initial_call=True
-)
-def select_db(n_clicks_list):
-    ctx = callback_context
-    if not ctx.triggered:
-        return dash.no_update, dash.no_update
-    triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
-    db_name = eval(triggered_id)["index"]
-    return db_name, db_name
-
-# ─── LCA 분석결과 계산 및 표 표시 ──────────────────
-@app.callback(
-    Output("lca-result-table", "data"),
-    [Input("run-lca-analysis", "n_clicks"), Input("url", "pathname")],
-    State("table-store", "data"),
-    State("impact-values-store", "data"),
-    prevent_initial_call=True
-)
-def update_lca_result(run_clicks, pathname, input_materials, impact_db):
-    category_keys = {
-        "원료물질": "raw_material",
-        "보조물질": "additive",
-        "에너지": "energy",
-        "유틸리티": "utility",
-        "수송": "transport",
-        "폐기물처리": "waste"
-    }
-    lca_result = {cat: {k: 0 for k in category_keys.values()} for cat, _ in impact_categories}
-    lca_total = {cat: 0 for cat, _ in impact_categories}
-    for inp in input_materials:
-        try:
-            amount = float(inp["amount"])
-        except (ValueError, TypeError):
-            continue
-        matched = False
-        for row in impact_db:
-            if (row["DB명"].strip() == inp["db"].strip() and 
-                row["국가"].strip() == inp["country"].strip()):
-                matched = True
-                db_row = row
-                break
-        if not matched:
-            continue
-        cat_key = category_keys.get(inp["category"])
-        if not cat_key:
-            continue
-        # 단위 변환
-        input_unit = inp.get("unit")
-        db_unit = inp.get("dbunit")
-        unit_factor = 1.0
-        if input_unit and db_unit:
-            iu = input_unit.strip().lower()
-            du = db_unit.strip().lower()
-            if du == "kg" and iu == "g":
-                unit_factor = 1/1000
-            elif du == "kg" and iu == "ton":
-                unit_factor = 1000
-            elif du == "g" and iu == "kg":
-                unit_factor = 1000
-            elif du == "ton" and iu == "kg":
-                unit_factor = 1/1000
-            # 필요시 더 다양한 단위 변환 추가
-        for cat, _ in impact_categories:
-            if cat in db_row:
-                value = db_row[cat] * amount * unit_factor
-                lca_total[cat] += value
-                lca_result[cat][cat_key] += value
-
-    # result_table 생성
-    result_table = []
-    for idx, (cat, unit) in enumerate(impact_categories, 1):
-        row = {
-            "no": idx,
-            "impact": cat,
-            "unit": unit,
-            "total": f"{lca_total[cat]:.2E}",
-            "raw_material": f"{lca_result[cat]['raw_material']:.2E}",
-            "additive": f"{lca_result[cat]['additive']:.2E}",
-            "energy": f"{lca_result[cat]['energy']:.2E}",
-            "utility": f"{lca_result[cat]['utility']:.2E}",
-            "transport": f"{lca_result[cat]['transport']:.2E}",
-            "waste": f"{lca_result[cat]['waste']:.2E}"
-        }
-        result_table.append(row)
-    return result_table
- 
 
 if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', port=8050)
+    print("Dash is running on http://0.0.0.0:8050/")
+    app.run(host='0.0.0.0', port=8050, debug=False)
