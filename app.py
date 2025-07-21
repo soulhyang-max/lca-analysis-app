@@ -1688,30 +1688,26 @@ lca_columns = [
 ]
 
 # ─── 사이드바 ────────────────────────────────────────
-sidebar = html.Div(
-    [
-        html.H2("LCA 분석", className="display-6", style={"fontSize": "1.5rem"}),
-        html.Hr(),
-        dbc.Nav(
-            [
-                dbc.NavLink("기본정보", href="/", active="exact"),
-                dbc.NavLink("투입물", href="/inputs", active="exact"),
-                dbc.NavLink("산출물", href="/outputs", active="exact"),
-                dbc.NavLink("에너지/유틸리티", href="/energy", active="exact"),
-                dbc.NavLink("원료수송", href="/transport", active="exact"),
-                dbc.NavLink("DB목록", href="/db", active="exact"),
-                dbc.NavLink("LCA 분석결과", href="/lca", active="exact"),
-            ],
-            vertical=True,
-            pills=True,
-        ),
+def get_sidebar():
+    return dbc.Nav([
+        html.H4("LCA 분석", style={
+            "color": "#1a365d",
+            "fontWeight": "700",
+            "fontSize": "1.5rem",
+            "marginBottom": "1.5rem",
+            "paddingLeft": "1rem",
+            "borderLeft": "4px solid #3B82F6",
+            "letterSpacing": "0.025em"
+        }),
+        dbc.NavLink("기본정보", href="/basic-info", active="exact"),
+        dbc.NavLink("원료정보", href="/inputs", active="exact"),
+        dbc.NavLink("원료수송", href="/transport", active="exact"),
+        dbc.NavLink("DB목록", href="/db", active="exact"),
+        dbc.NavLink("LCA 분석결과", href="/lca", active="exact"),
     ],
-    style={
-        "position": "fixed",
-        "top": 0, "left": 0, "bottom": 0,
-        "width": "16rem", "padding": "2rem 1rem",
-        "background-color": "#f8f9fa",
-    },
+    vertical=True,
+    pills=True,
+    style={"position": "fixed", "top": "56px", "left": "0", "bottom": "0", "width": "16rem", "padding": "2rem 1rem", "background-color": "#f8fafc"}
 )
 
 # ─── 앱 레이아웃 ──────────────────────────────────────
@@ -1722,62 +1718,305 @@ external_fonts = [
 ]
 app = dash.Dash(__name__, external_stylesheets=external_fonts, suppress_callback_exceptions=True)
 server = app.server
+
+# 네비게이션 바 스타일 정의
+def get_navbar():
+    return dbc.Navbar(
+        dbc.Container(
+            [
+                dbc.Nav(
+                    [
+                        dbc.Button(
+                            "로그인",
+                            id="nav-login-button",
+                            style={
+                                'backgroundColor': '#4C566A',
+                                'border': 'none',
+                                'borderRadius': '6px',
+                                'padding': '8px 20px',
+                                'color': '#ECEFF4',
+                                'fontWeight': '500',
+                                'fontSize': '0.95rem',
+                                'letterSpacing': '0.3px',
+                                'transition': 'all 0.2s ease',
+                                'boxShadow': '0 2px 4px rgba(76, 86, 106, 0.2)',
+                                'marginRight': '15px',
+                            }
+                        ),
+                    ],
+                    className="ms-auto",
+                    navbar=True,
+                ),
+            ],
+        ),
+        color="#ECEFF4",
+        dark=False,
+        className="mb-5",
+        style={'boxShadow': '0 2px 4px rgba(76, 86, 106, 0.1)'}
+    )
+
 app.layout = html.Div([
     dcc.Location(id="url"),
-    dcc.Store(id="table-store", data=load_material_data(), storage_type="session"),            # 투입물 테이블 데이터
+    dcc.Store(id="basic-info-store", storage_type="session"),
+    dcc.Store(id="table-store", data=load_material_data(), storage_type="session"),
     dcc.Store(id="impact-values-store", data=impact_db),
     dcc.Store(id="db-data", data=sample_db_data.to_dict("records"), storage_type="session"),
     dcc.Store(id="db-edit-store", data=sample_db_data.to_dict("records"), storage_type="session"),
     dcc.Store(id="selected-db", data=None, storage_type="session"),
-    sidebar,
-    html.Div(id="page-content", style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"}),
+    html.Div(id="page-content")
 ], style={"fontFamily": "Roboto, Arial, sans-serif"})
 
 # ─── 페이지 렌더링 ─────────────────────────────────────
 def render_page(pathname):
-    if pathname == "/inputs":
+    if pathname == "/":
+        # 히어로섹션만
+        return html.Div([
+            html.Div([
+                html.I(className="fas fa-leaf hero-icon"),
+                html.H1("지속가능한 미래를 위한", className="hero-title"),
+                html.H2("LCA 환경영향 분석 시스템", className="hero-subtitle"),
+                html.P("제품의 전 생애주기에서 발생하는 환경영향을 과학적으로 측정하고 분석하여, 친환경적이고 지속가능한 의사결정을 지원하는 전문 도구입니다.", className="hero-description"),
+                html.Div([
+                    html.Div([
+                        html.I(className="fas fa-chart-line hero-feature-icon"),
+                        html.H3("정확한 분석", className="hero-feature-title"),
+                        html.P("과학적 방법론을 통한 정밀한 환경영향 평가", className="hero-feature-desc")
+                    ], className="hero-feature", style={
+                        "width": "280px",
+                        "minHeight": "200px",
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "alignItems": "center",
+                        "justifyContent": "flex-start",
+                        "background": "linear-gradient(145deg, #ffffff, #f0f7fa)",
+                        "borderRadius": "24px",
+                        "boxShadow": "8px 8px 16px #e8eaed, -8px -8px 16px #ffffff",
+                        "margin": "0 20px",
+                        "padding": "36px 24px",
+                        "transition": "transform 0.2s ease, box-shadow 0.2s ease",
+                        "cursor": "default",
+                        "border": "1px solid rgba(147, 197, 253, 0.3)",
+                        "position": "relative",
+                        "overflow": "hidden"
+                    }),
+                    html.Div([
+                        html.I(className="fas fa-leaf hero-feature-icon"),
+                        html.H3("친환경 솔루션", className="hero-feature-title"),
+                        html.P("지속가능한 발전을 위한 환경 친화적 해결방안", className="hero-feature-desc")
+                    ], className="hero-feature", style={
+                        "width": "280px",
+                        "minHeight": "200px",
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "alignItems": "center",
+                        "justifyContent": "flex-start",
+                        "background": "linear-gradient(145deg, #ffffff, #f0f7fa)",
+                        "borderRadius": "24px",
+                        "boxShadow": "8px 8px 16px #e8eaed, -8px -8px 16px #ffffff",
+                        "margin": "0 20px",
+                        "padding": "36px 24px",
+                        "transition": "transform 0.2s ease, box-shadow 0.2s ease",
+                        "cursor": "default",
+                        "border": "1px solid rgba(147, 197, 253, 0.3)",
+                        "position": "relative",
+                        "overflow": "hidden"
+                    }),
+                    html.Div([
+                        html.I(className="fas fa-clock hero-feature-icon"),
+                        html.H3("신속한 처리", className="hero-feature-title"),
+                        html.P("빠르고 정확한 데이터 처리 및 결과 도출", className="hero-feature-desc")
+                    ], className="hero-feature", style={
+                        "width": "280px",
+                        "minHeight": "200px",
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "alignItems": "center",
+                        "justifyContent": "flex-start",
+                        "background": "linear-gradient(145deg, #ffffff, #f0f7fa)",
+                        "borderRadius": "24px",
+                        "boxShadow": "8px 8px 16px #e8eaed, -8px -8px 16px #ffffff",
+                        "margin": "0 20px",
+                        "padding": "36px 24px",
+                        "transition": "transform 0.2s ease, box-shadow 0.2s ease",
+                        "cursor": "default",
+                        "border": "1px solid rgba(147, 197, 253, 0.3)",
+                        "position": "relative",
+                        "overflow": "hidden"
+                    })
+                ], className="hero-features", style={
+                    "display": "flex", 
+                    "justifyContent": "center", 
+                    "gap": "24px",
+                    "marginTop": "48px",
+                    "position": "relative",
+                    "zIndex": "1"
+                })
+            ], className="hero-content")
+        ], style={
+            "position": "absolute",
+            "top": "56px",
+            "left": "0",
+            "width": "100vw",
+            "height": "calc(100vh - 56px)",
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "margin": "0",
+            "padding": "0"
+        })
+    elif pathname == "/basic-info":
         return dbc.Container([
-            html.H2("투입물 입력"),
-            dbc.Row([dbc.Label("물질명", width=2),
-                     dbc.Col(dbc.Input(id="material-name", type="text", placeholder="물질명을 입력하세요"), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("투입량", width=2),
-                     dbc.Col(dbc.Input(id="material-amount", type="number", placeholder="숫자를 입력하세요"), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("단위", width=2),
-                     dbc.Col(dcc.Dropdown(
-                         id="material-unit",
-                         options=[{"label": u, "value": u} for u in ["g", "kg", "ton", "m³", "L", "kWh", "MJ"]],
-                         placeholder="단위를 선택하세요"
-                     ), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("분류", width=2),
-                     dbc.Col(dcc.Dropdown(
-                         id="material-category",
-                         options=[
-                             {"label": "원료물질", "value": "원료물질"},
-                             {"label": "보조물질", "value": "보조물질"},
-                             {"label": "에너지", "value": "에너지"},
-                             {"label": "유틸리티", "value": "유틸리티"},
-                             {"label": "수송", "value": "수송"},
-                             {"label": "폐기물처리", "value": "폐기물처리"},
-                         ],
-                         placeholder="분류를 선택하세요"
-                     ), width=4)], className="mb-3"),
+            html.H4("기본정보 입력", style={
+                "color": "#223344",
+                "fontWeight": "600",
+                "fontSize": "1.15rem",
+                "marginBottom": "1.5rem",
+                "paddingLeft": "0.75rem",
+                "borderLeft": "3px solid #7fbbb3",
+                "letterSpacing": "0.02em",
+                "display": "inline-block"
+            }),
             dbc.Row([
-                dbc.Label("연결 DB", width=2),
-                dbc.Col(dbc.Input(id="material-db", type="text", placeholder="선택된 DB명", disabled=True), width=4),
-                dbc.Col(dbc.Button("연결 DB 검색", id="open-db-search", color="info"), width="auto"),
+                dbc.Label("업체명", width=3, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="company-name", type="text", placeholder="업체명을 입력하세요", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}), width=6)
             ], className="mb-3"),
-            dbc.Row([dbc.Label("국가", width=2),
-                 dbc.Col(dcc.Dropdown(
+            dbc.Row([
+                dbc.Label("제품명", width=3, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="product-name", type="text", placeholder="제품명을 입력하세요", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}), width=6)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("기능단위", width=3, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="functional-unit", type="text", placeholder="기능단위를 입력하세요", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}), width=6)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("데이터 수집년도", width=3, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="data-year", type="number", placeholder="예: 2024", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}), width=6)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("제품 생산량(톤)", width=3, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="product-amount", type="number", placeholder="제품 생산량(톤)", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}), width=6)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("사업장 전체 생산량(톤)", width=3, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="total-amount", type="number", placeholder="사업장 전체 생산량(톤)", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}), width=6)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Col(dbc.Button("저장", id="save-basic-info", color="primary", style={
+                    "borderRadius": "8px",
+                    "fontWeight": "600",
+                    "background": "#eceff4",
+                    "color": "#2563eb",
+                    "border": "1px solid #7fbbb3",
+                    "boxShadow": "0 2px 8px rgba(127,187,179,0.08)",
+                    "padding": "0.6rem 1.2rem",
+                    "transition": "background 0.2s"
+                }), width="auto")
+            ], className="mb-3")
+        ], fluid=True)
+    elif pathname == "/inputs":
+        return dbc.Container([
+            html.H4("투입물 입력", style={
+                "color": "#223344",
+                "fontWeight": "600",
+                "fontSize": "1.15rem",
+                "marginBottom": "1.5rem",
+                "paddingLeft": "0.75rem",
+                "borderLeft": "3px solid #7fbbb3",
+                "letterSpacing": "0.02em",
+                "display": "inline-block"
+            }),
+            dbc.Row([
+                dbc.Label("물질명", width=2, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="material-name", type="text", placeholder="물질명을 입력하세요", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "padding": "0.6rem", "background": "#f7fafc"}), width=4)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("투입량", width=2, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="material-amount", type="number", placeholder="숫자를 입력하세요", style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "padding": "0.6rem", "background": "#f7fafc"}), width=4)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("단위", width=2, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dcc.Dropdown(
+                    id="material-unit",
+                    options=[{"label": u, "value": u} for u in ["g", "kg", "ton", "m³", "L", "kWh", "MJ"]],
+                    placeholder="단위를 선택하세요",
+                    style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}
+                ), width=4)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("분류", width=2, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dcc.Dropdown(
+                    id="material-category",
+                    options=[
+                        {"label": "원료물질", "value": "원료물질"},
+                        {"label": "보조물질", "value": "보조물질"},
+                        {"label": "에너지", "value": "에너지"},
+                        {"label": "유틸리티", "value": "유틸리티"},
+                        {"label": "수송", "value": "수송"},
+                        {"label": "폐기물처리", "value": "폐기물처리"},
+                    ],
+                    placeholder="분류를 선택하세요",
+                    style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}
+                ), width=4)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("연결 DB", width=2, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="material-db", type="text", placeholder="선택된 DB명", disabled=True, style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#e5e9f0"}), width=4),
+                dbc.Col(dbc.Button("연결 DB 검색", id="open-db-search", color="info", style={
+                    "borderRadius": "8px",
+                    "fontWeight": "600",
+                    "background": "#d8dee9",
+                    "color": "#223344",
+                    "border": "1px solid #7fbbb3",
+                    "boxShadow": "0 2px 8px rgba(127,187,179,0.08)",
+                    "transition": "background 0.2s"
+                }), width="auto"),
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Label("국가", width=2, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dcc.Dropdown(
                     id="material-country",
                     options=[],  # DB 선택 시 자동으로 채워짐
-                    placeholder="국가를 선택하세요"
-                ), width=4)], className="mb-3"),
-            dbc.Row([dbc.Label("단위", width=2),
-                     dbc.Col(dbc.Input(id="material-dbunit", type="text", placeholder="DB 단위 (자동 적용 예정)", disabled=True), width=4)], className="mb-3"),
+                    placeholder="국가를 선택하세요",
+                    style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#f7fafc"}
+                ), width=4)
+            ], className="mb-3"),
             dbc.Row([
-                dbc.Col(dbc.Button("추가", id="add-row", color="primary"), width="auto"),
-                dbc.Col(dbc.Button("삭제", id="delete-row", color="danger"), width="auto"),
-                dbc.Col(dbc.Button("저장", id="save-data", color="success"), width="auto"),
+                dbc.Label("단위", width=2, style={"fontWeight": "500", "color": "#4a5568"}),
+                dbc.Col(dbc.Input(id="material-dbunit", type="text", placeholder="DB 단위 (자동 적용 예정)", disabled=True, style={"borderRadius": "8px", "border": "1px solid #e5e9f0", "background": "#e5e9f0"}), width=4)
+            ], className="mb-3"),
+            dbc.Row([
+                dbc.Col(dbc.Button("추가", id="add-row", color="primary", style={
+                    "borderRadius": "8px",
+                    "fontWeight": "600",
+                    "background": "#eceff4",
+                    "color": "#2563eb",
+                    "border": "1px solid #7fbbb3",
+                    "boxShadow": "0 2px 8px rgba(127,187,179,0.08)",
+                    "padding": "0.6rem 1.2rem",
+                    "marginRight": "0.5rem",
+                    "transition": "background 0.2s"
+                }), width="auto"),
+                dbc.Col(dbc.Button("삭제", id="delete-row", color="danger", style={
+                    "borderRadius": "8px",
+                    "fontWeight": "600",
+                    "background": "#eceff4",
+                    "color": "#bf616a",
+                    "border": "1px solid #7fbbb3",
+                    "boxShadow": "0 2px 8px rgba(127,187,179,0.08)",
+                    "padding": "0.6rem 1.2rem",
+                    "marginRight": "0.5rem",
+                    "transition": "background 0.2s"
+                }), width="auto"),
+                dbc.Col(dbc.Button("저장", id="save-data", color="success", style={
+                    "borderRadius": "8px",
+                    "fontWeight": "600",
+                    "background": "#eceff4",
+                    "color": "#287271",
+                    "border": "1px solid #7fbbb3",
+                    "boxShadow": "0 2px 8px rgba(127,187,179,0.08)",
+                    "padding": "0.6rem 1.2rem",
+                    "transition": "background 0.2s"
+                }), width="auto"),
                 dbc.Col(html.Div(id="analysis-result"), width=6),
             ], className="mb-3"),
             dash_table.DataTable(
@@ -1793,9 +2032,11 @@ def render_page(pathname):
                 ],
                 data=[], row_selectable="multi", selected_rows=[],
                 editable=True,
-                style_cell={'textAlign':'center','padding':'5px','fontFamily': 'Roboto, Arial, sans-serif'},
-                style_header={'textAlign':'center','fontWeight':'bold','backgroundColor':'#f1f1f1', 'fontFamily': 'Roboto, Arial, sans-serif'},
-                style_table={'margin-top':'10px'}
+                style_cell={'textAlign':'center','padding':'8px','fontFamily': 'Roboto, Arial, sans-serif', 'border': '1px solid #e2e8f0'},
+                style_header={'textAlign':'center','fontWeight':'bold','backgroundColor':'#f1f5f9', 'fontFamily': 'Roboto, Arial, sans-serif', 'color': '#1a365d', 'border': '1px solid #e2e8f0'},
+                style_table={'margin-top':'10px', 'borderRadius': '8px', 'overflow': 'hidden', 'boxShadow': '0 2px 8px rgba(0,0,0,0.04)'},
+                style_data={'backgroundColor': 'white', 'color': '#4a5568'},
+                style_data_conditional=[{'if': {'row_index': 'odd'}, 'backgroundColor': '#f8fafc'}]
             ),
             dbc.Modal([
                 dbc.ModalHeader("DB 검색"),
@@ -1814,18 +2055,18 @@ def render_page(pathname):
                             ],
                             value="",
                             placeholder="분류 선택(전체)",
-                            style={"marginBottom": "10px"}
+                            style={"marginBottom": "10px", "borderRadius": "8px", "border": "1px solid #e2e8f0", "background": "#f8fafc"}
                         ), width=12)
                     ]),
-                    dbc.Input(id="db-search-input", type="text", placeholder="DB명을 입력하세요", className="mb-2"),
+                    dbc.Input(id="db-search-input", type="text", placeholder="DB명을 입력하세요", className="mb-2", style={"borderRadius": "8px", "border": "1px solid #e2e8f0"}),
                     html.Div(id="db-search-results"),
                     html.Hr(),
                     html.Div("선택된 DB명:", style={"marginTop": "10px"}),
                     html.Div(id="selected-db-name", style={"fontWeight": "bold", "marginBottom": "10px"})
                 ]),
                 dbc.ModalFooter([
-                    dbc.Button("확인", id="confirm-db-selection", color="primary", className="me-2"),
-                    dbc.Button("닫기", id="close-db-search", color="secondary")
+                    dbc.Button("확인", id="confirm-db-selection", color="primary", className="me-2", style={"borderRadius": "8px", "fontWeight": "500"}),
+                    dbc.Button("닫기", id="close-db-search", color="secondary", style={"borderRadius": "8px", "fontWeight": "500"})
                 ])
             ], id="db-search-modal", is_open=False, centered=True, style={
                 "maxWidth": "900px",
@@ -1877,7 +2118,16 @@ def render_page(pathname):
 
     elif pathname == "/lca":
         return dbc.Container([
-            html.H2("LCA 분석결과"),
+            html.H4("LCA 분석", style={
+                "color": "#1a365d",
+                "fontWeight": "700",
+                "fontSize": "1.5rem",
+                "marginBottom": "1.5rem",
+                "paddingLeft": "1rem",
+                "borderLeft": "4px solid #3B82F6",
+                "letterSpacing": "0.025em",
+                "display": "inline-block"
+            }),
             dbc.Row([
                 dbc.Col(dbc.Button("LCA 분석 실행", id="run-lca-analysis", color="primary"), width="auto"),
             ], className="mb-3"),
@@ -1895,44 +2145,50 @@ def render_page(pathname):
                 style_table={'margin-top': '20px', 'margin-bottom': '20px'},
                 page_size=25,
             ),
-            html.P("※ 각 분류별 LCA 결과값이 여기 표에 표시됩니다. 숫자 입력은 자동 계산됩니다."),
-        ], fluid=True)
+            html.H4("환경영향 분포 파이차트"),
+            dcc.Graph(id="impact-pie-chart"),  # 콜백에서 figure 제공
+            html.H4("분류별 환경영향 막대그래프"),
+            dcc.Graph(id="impact-bar-chart"),  # 콜백에서 figure 제공
+            html.H4("영향범주별 상세 분석 스택바"),
+            dcc.Graph(id="impact-detailed-chart"),  # 콜백에서 figure 제공
 
-    elif pathname == "/":
-        # 첫화면: 히어로 섹션 + 로그인 버튼
-        return html.Div([
+            html.Hr(),
             html.Div([
-                html.I(className="fas fa-leaf hero-icon"),
-                html.H1("지속가능한 미래를 위한", className="hero-title"),
-                html.H2("LCA 환경영향 분석 시스템", className="hero-subtitle"),
-                html.P("제품의 전 생애주기에서 발생하는 환경영향을 과학적으로 측정하고 분석하여, 친환경적이고 지속가능한 의사결정을 지원하는 전문 도구입니다.", className="hero-description"),
-                html.Div([
-                    html.Div([
-                        html.I(className="fas fa-chart-line hero-feature-icon"),
-                        html.H3("정확한 분석", className="hero-feature-title"),
-                        html.P("과학적 방법론을 통한 정밀한 환경영향 평가", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                    html.Div([
-                        html.I(className="fas fa-database hero-feature-icon"),
-                        html.H3("방대한 DB", className="hero-feature-title"),
-                        html.P("국내외 다양한 환경영향 DB 내장", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                    html.Div([
-                        html.I(className="fas fa-bolt hero-feature-icon"),
-                        html.H3("빠른 결과", className="hero-feature-title"),
-                        html.P("즉각적인 분석 및 시각화 제공", className="hero-feature-desc")
-                    ], className="hero-feature"),
-                ], className="hero-features"),
-            ], className="hero-content"),
-            html.Button("로그인", id="login-button", className="login-btn", n_clicks=0, style={"position": "fixed", "top": "2rem", "right": "2rem", "zIndex": 1000}),
-        ], style={"display": "flex", "alignItems": "center", "justifyContent": "center", "minHeight": "100vh"})
+                html.Img(src="/assets/eco_leaf.png", style={"height": "80px", "marginRight": "20px"}),
+                html.Img(src="/assets/co2_green.png", style={"height": "80px"}),
+            ], style={"display": "flex", "justifyContent": "center", "alignItems": "center", "marginTop": "2rem"}),
+            html.P("※ 친환경/온실가스 이미지는 assets 폴더에 eco_leaf.png, co2_green.png 등으로 저장해 주세요.", style={"textAlign": "center", "fontSize": "0.95em"})
+        ], fluid=True)
 
     return html.Div([html.H3("페이지 준비 중입니다.")])
 
 # ─── 페이지 전환 ────────────────────────────────
 @app.callback(Output("page-content", "children"), Input("url", "pathname"))
 def display_page(pathname):
-    return render_page(pathname)
+    if pathname == "/":
+        # 히어로섹션에서는 navbar는 보이고 sidebar는 숨김
+        return html.Div([
+            get_navbar(),  # navbar 추가
+            render_page("/")  # 히어로섹션
+        ])
+    else:
+        # 다른 페이지에서는 navbar, sidebar 모두 표시
+        return html.Div([
+            get_navbar(),
+            get_sidebar(),
+            html.Div(render_page(pathname), style={"margin-left": "18rem", "margin-right": "2rem", "padding": "2rem 1rem"})
+        ])
+
+# 3. 로그인 버튼 클릭 시 기본정보(메인) 페이지로 이동하도록 콜백 수정
+@app.callback(
+    Output("url", "pathname"),
+    Input("nav-login-button", "n_clicks"),
+    prevent_initial_call=True
+)
+def go_to_main(n_clicks):
+    if n_clicks:
+        return "/inputs"  # 또는 "/"로 이동(기본정보)
+    return dash.no_update
 
 # ─── DB목록 관리 테이블 동기화 ───────────────────
 @app.callback(
@@ -2243,6 +2499,47 @@ def update_lca_result(run_clicks, pathname, input_materials, impact_db):
         result_table.append(row)
     return result_table
  
+
+# --- Add callback for saving and loading basic info ---
+from dash.dependencies import Output, Input, State
+
+@app.callback(
+    Output("basic-info-store", "data"),
+    Input("save-basic-info", "n_clicks"),
+    State("company-name", "value"),
+    State("product-name", "value"),
+    State("functional-unit", "value"),
+    State("data-year", "value"),
+    State("product-amount", "value"),
+    State("total-amount", "value"),
+    prevent_initial_call=True
+)
+def save_basic_info(n_clicks, company, product, unit, year, product_amt, total_amt):
+    if n_clicks:
+        return {
+            "company": company,
+            "product": product,
+            "unit": unit,
+            "year": year,
+            "product_amt": product_amt,
+            "total_amt": total_amt
+        }
+    return dash.no_update
+
+@app.callback(
+    [Output("company-name", "value"),
+     Output("product-name", "value"),
+     Output("functional-unit", "value"),
+     Output("data-year", "value"),
+     Output("product-amount", "value"),
+     Output("total-amount", "value")],
+    Input("basic-info-store", "data"),
+    prevent_initial_call=False
+)
+def load_basic_info(data):
+    if data:
+        return [data.get("company"), data.get("product"), data.get("unit"), data.get("year"), data.get("product_amt"), data.get("total_amt")]
+    return [None, None, None, None, None, None]
 
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0', port=8050)
